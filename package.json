@@ -1,0 +1,8 @@
+{
+  "name": "learningfuze-workshop-setting-up-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/benjamminj/learningfuze-workshop-setting-up-tests.git",
+  "author": "Benjamin Johnson <benjamin.d.johnson@icloud.com>",
+  "license": "MIT"
+}
