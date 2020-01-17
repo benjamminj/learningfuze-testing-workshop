@@ -21,7 +21,10 @@ export class ThreadsService {
   static addThread(threadData) {
     const id = generateId()
 
+    // TODO: validate that title / content exist
     const thread = {
+      comments: [],
+      reactions: {},
       ...threadData,
       id,
     }
