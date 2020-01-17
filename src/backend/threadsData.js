@@ -3,7 +3,7 @@ export const threads = {
     id: 'n4uajfhps',
     title: 'My first thread!',
     content: 'This is the content for the thread',
-    comments: ['a', 'b'],
+    comments: ['5tvf1vv39', '7sack1xhe'],
     reactions: {
       '🔥': 30,
       '👍': 20,
@@ -13,7 +13,7 @@ export const threads = {
     id: '624p8jvnk',
     title: 'Another cool thread',
     content: "This is the content for the second thread, it's got some stuffz",
-    comments: ['c'],
+    comments: ['n99putsfi'],
     reactions: {
       '🚀': 3,
     },

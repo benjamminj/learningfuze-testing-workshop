@@ -1,1 +1,1 @@
-export { ThreadsPage as default } from '../src/pages'
+export { ThreadsPage as default } from '../src/components/ThreadsPage'

@@ -1,4 +1,4 @@
-import { ThreadsService } from '../../backend/threadsService'
+import { ThreadsService } from '../backend/threadsService'
 
 export const controller = (req, res) => {
   if (req.method === 'GET') {

@@ -1,4 +1,4 @@
-import { threads } from './threadsData'
+import { threads, comments } from './threadsData'
 import { generateId } from './generateId'
 
 export class ThreadsService {
@@ -7,7 +7,15 @@ export class ThreadsService {
   }
 
   static getThreadById(id) {
-    return threads[id]
+    const thread = threads[id]
+    const expandedComments = thread.comments
+      .map(commentId => comments[commentId])
+      .filter(comment => comment)
+
+    return {
+      ...thread,
+      comments: expandedComments,
+    }
   }
 
   static addThread(threadData) {
@@ -49,6 +57,7 @@ export class ThreadsService {
       id,
     }
 
+    comments[id] = comment
     threads[threadId].comments.push(id)
 
     return comment

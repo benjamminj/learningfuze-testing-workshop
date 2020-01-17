@@ -1,5 +1,7 @@
 import { ThreadsService } from '../backend/threadsService'
 import fetch from 'isomorphic-unfetch'
+import Link from 'next/link'
+import { ROOT_URL } from '../constants'
 
 const Thread = ({ id, title, description, comments, reactions }) => {
   const reactionsCount = Object.values(reactions).reduce(
@@ -11,7 +13,11 @@ const Thread = ({ id, title, description, comments, reactions }) => {
 
   return (
     <div>
-      <h2>{title}</h2>
+      <h2>
+        <Link href="/[threadId]" as={`/${id}`}>
+          <a>{title}</a>
+        </Link>
+      </h2>
       <p>{description}</p>
       <p>
         {commentsCount} {commentsCount === 1 ? 'comment' : 'comments'}
@@ -19,16 +25,6 @@ const Thread = ({ id, title, description, comments, reactions }) => {
       <p>
         {reactionsCount} {reactionsCount === 1 ? 'reaction' : 'reactions'}
       </p>
-      <button
-        onClick={() => {
-          ThreadsService.addComment(id, {
-            user: 'Ben Johnson',
-            content: 'Added comment???',
-          })
-        }}
-      >
-        add comment
-      </button>
     </div>
   )
 }
@@ -42,8 +38,6 @@ export const ThreadsPage = ({ threads }) => {
     </div>
   )
 }
-
-const ROOT_URL = 'http://localhost:3000'
 
 ThreadsPage.getInitialProps = async () => {
   const threads = await fetch(ROOT_URL + '/api/threads').then(res => res.json())
