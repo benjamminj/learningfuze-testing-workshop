@@ -73,6 +73,7 @@ export const ThreadProfilePage = ({ thread }) => {
 
 ThreadProfilePage.getInitialProps = async ctx => {
   const { threadId } = ctx.query
+
   const thread = await fetch(ROOT_URL + `/api/threads/${threadId}`).then(res =>
     res.json()
   )
