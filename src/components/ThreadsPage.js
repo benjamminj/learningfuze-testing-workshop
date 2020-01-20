@@ -1,8 +1,24 @@
-import { ThreadsService } from '../backend/threadsService'
 import fetch from 'isomorphic-unfetch'
 import Link from 'next/link'
 import { ROOT_URL } from '../constants'
 import { useState } from 'react'
+import { GlobalStyles } from './GlobalStyles'
+import { AddThreadForm } from './AddThreadForm'
+
+const Badge = ({ children, style }) => {
+  return (
+    <p
+      style={{
+        background: 'var(--neutral-050)',
+        display: 'inline',
+        padding: '4px',
+        ...style,
+      }}
+    >
+      {children}
+    </p>
+  )
+}
 
 const Thread = ({ id, title, description, comments, reactions }) => {
   const reactionsCount = Object.values(reactions).reduce(
@@ -13,71 +29,52 @@ const Thread = ({ id, title, description, comments, reactions }) => {
   const commentsCount = comments.length
 
   return (
-    <div>
-      <h2>
+    <div
+      style={{
+        border: '2px solid var(--neutral-100)',
+        marginTop: '8px',
+        padding: '16px',
+      }}
+    >
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '12px' }}>
         <Link href="/[threadId]" as={`/${id}`}>
           <a>{title}</a>
         </Link>
       </h2>
       <p>{description}</p>
-      <p>
-        {commentsCount} {commentsCount === 1 ? 'comment' : 'comments'}
-      </p>
-      <p>
-        {reactionsCount} {reactionsCount === 1 ? 'reaction' : 'reactions'}
-      </p>
+
+      <div style={{ display: 'flex' }}>
+        <Badge>💬 {commentsCount}</Badge>
+        <Badge style={{ marginLeft: '4px' }}>👍 {reactionsCount}</Badge>
+      </div>
     </div>
-  )
-}
-
-const AddThreadForm = ({ onSubmit }) => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  return (
-    <form
-      onSubmit={ev => {
-        ev.preventDefault()
-        onSubmit({ title, content })
-      }}
-    >
-      <label htmlFor="threadTitle">title</label>
-      <input
-        id="threadTitle"
-        value={title}
-        onChange={ev => setTitle(ev.target.value)}
-      />
-      <label htmlFor="threadContent">content</label>
-      <textarea
-        id="threadContent"
-        value={content}
-        onChange={ev => setContent(ev.target.value)}
-      />
-
-      <button type="submit">Submit</button>
-    </form>
   )
 }
 
 export const ThreadsPage = ({ threads: initialThreads }) => {
   const [threads, setThreads] = useState(initialThreads)
   return (
-    <div>
+    <div style={{ padding: '16px' }}>
       {threads.map(thread => (
         <Thread key={thread.id} {...thread} />
       ))}
 
-      <AddThreadForm
-        onSubmit={form => {
-          fetch('/api/threads', {
-            method: 'POST',
-            body: JSON.stringify(form),
-          })
-            .then(res => res.json())
-            .then(thread =>
-              setThreads(prevThreads => prevThreads.concat([thread]))
-            )
-        }}
-      />
+      <div style={{ marginTop: '32px' }}>
+        <AddThreadForm
+          onSubmit={form => {
+            fetch('/api/threads', {
+              method: 'POST',
+              body: JSON.stringify(form),
+            })
+              .then(res => res.json())
+              .then(thread =>
+                setThreads(prevThreads => prevThreads.concat([thread]))
+              )
+          }}
+        />
+      </div>
+
+      <GlobalStyles />
     </div>
   )
 }
