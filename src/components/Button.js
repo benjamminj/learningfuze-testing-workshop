@@ -1,3 +1,6 @@
+/**
+ * Styled button. Override the default styles using the `style` prop.
+ */
 export const Button = ({ children, style, type = 'button', ...props }) => {
   return (
     <button

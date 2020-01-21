@@ -3,6 +3,14 @@ import { Input } from './Input'
 import { TextArea } from './TextArea'
 import { Button } from './Button'
 
+/**
+ * Allows a user to add a comment to a thread.
+ *
+ * Right now this form just uses the built-in HTML validation for form elements.
+ *
+ * ⭐️ Bonus points: make the form show an error message below each form field that
+ * is not populated when the user tries to submit the form.
+ */
 export const AddCommentForm = ({ onSubmitForm }) => {
   const [user, setUser] = useState('')
   const [content, setContent] = useState('')
@@ -40,7 +48,7 @@ export const AddCommentForm = ({ onSubmitForm }) => {
         style={{ background: 'var(--neutral-600)', color: 'var(--white)' }}
         type="submit"
       >
-        submit
+        Submit
       </Button>
     </form>
   )

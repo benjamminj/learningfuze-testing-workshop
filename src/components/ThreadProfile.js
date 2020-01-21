@@ -6,11 +6,25 @@ import { useState, useEffect } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { Button } from './Button'
 
+/**
+ * Renders the profile for an individual post.
+ *
+ * Each post displays the comments and reactions for that post, allowing you to
+ * interact with both.
+ */
 export const ThreadProfilePage = ({ thread }) => {
   const [comments, setComments] = useState(thread.comments)
   const [reactions, setReactions] = useState(thread.reactions)
 
-  // TODO: debounce the effect to not swarm the API?
+  // ⭐️ Bonus points: use a debounced effect to make sure that we're not sending
+  // more requests to the API than we need to.
+  //
+  // With the debounced effect it should only fire 1 `useEffect` after you stop clicking
+  // the reaction buttons. That effect would have the final state of the reactions and
+  // send up a single request containing the sum of all your actions.
+  //
+  // For more on debounce, check out [this link](https://davidwalsh.name/javascript-debounce-function).
+  // For an example of a debounced useEffect, check out [this link](https://usehooks.com/useDebounce/)
   useEffect(() => {
     const filteredReactions = {}
     for (let reaction in reactions) {
@@ -94,6 +108,19 @@ export const ThreadProfilePage = ({ thread }) => {
   )
 }
 
+/**
+ * `getInitialProps` is NextJS's way to handle fetching data on server.
+ *
+ * Right now this function will just crash the page if there's a
+ * problem fetching the thread. For example, if you try to go
+ * http://localhost:3000/this-will-break you'll get an error.
+ *
+ * ⭐️ Bonus points: add error handling so that this page either renders a 404 page
+ * (saying something like this post couldn't be found) or redirects you to the
+ * ThreadsPage (http://localhost:3000) when there's an error finding the post.
+ *
+ * For more on `getInitialProps`, check out [this link](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps)
+ */
 ThreadProfilePage.getInitialProps = async ctx => {
   const { threadId } = ctx.query
 

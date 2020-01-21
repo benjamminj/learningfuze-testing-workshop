@@ -1,5 +1,10 @@
 import { labelStyles, inputStyles } from '../styles'
 
+/**
+ * TextArea component. Only allows you to resize the textarea _vertically_.
+ *
+ * The label is attached / required to encourage accessible inputs by default.
+ */
 export const TextArea = ({
   label,
   name,

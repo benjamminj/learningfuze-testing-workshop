@@ -3,6 +3,18 @@ import { Input } from './Input'
 import { TextArea } from './TextArea'
 import { Button } from './Button'
 
+/**
+ * Adds a thread to the list of threads.
+ *
+ * Has two main states—hidden and visible. When hidden, the only thing in the DOM
+ * is a prompt to show the form. When visible, the entire form is rendered to the DOM.
+ *
+ * Right now the form leverages the built-in HTML validation for forms to make both
+ * fields required.
+ *
+ * ⭐️ Bonus points: make the form show some error text under each field that is
+ * not populated when the user tries to submit the form.
+ */
 export const AddThreadForm = ({ onSubmit }) => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -14,6 +26,13 @@ export const AddThreadForm = ({ onSubmit }) => {
         onSubmit={ev => {
           ev.preventDefault()
           onSubmit({ title, content })
+
+          // Reset the form
+          setTitle('')
+          setContent('')
+
+          // Close the form
+          setIsOpen(false)
         }}
       >
         <Input

@@ -1,5 +1,9 @@
 import { inputStyles, labelStyles } from '../styles'
 
+/**
+ * Input with a label. The label is attached to the input to encourage / force
+ * accessible design.
+ */
 export const Input = ({
   label,
   name,
