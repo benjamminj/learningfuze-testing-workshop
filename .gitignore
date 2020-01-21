@@ -1,3 +1,5 @@
 .vscode
 *.todo.md
 node_modules/
+.next/
+yarn-error.log
