@@ -1,5 +1,10 @@
-import { ThreadsService } from '../backend/threadsService'
+import { ThreadsService } from './threadsService'
 
+/**
+ * Handles requests related to fetching multiple threads.
+ *
+ * Right now the ability to create a thread and view a list of threads is permitted.
+ */
 export const controller = (req, res) => {
   if (req.method === 'GET') {
     const threads = ThreadsService.getAllThreads()

@@ -1,3 +1,11 @@
+// This file is our makeshift "database"—for the sake of simplicitly we're just using
+// 2 JavaScript objects to represent two tables or collections in the DB.
+
+/**
+ * A list of threads.
+ * Each thread's comments are an id from the "comments" object down below. If this were
+ * a SQL database that would be the column holding the relationship.
+ */
 export const threads = {
   n4uajfhps: {
     id: 'n4uajfhps',
@@ -20,6 +28,7 @@ export const threads = {
   },
 }
 
+/** Comments to various threads. */
 export const comments = {
   '5tvf1vv39': {
     id: '5tvf1vv39',
@@ -34,6 +43,6 @@ export const comments = {
   '7sack1xhe': {
     id: '7sack1xhe',
     user: 'Test Tester',
-    content: 'This is a third comment',
+    content: 'This is a comment from Test Tester',
   },
 }

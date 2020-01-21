@@ -1,5 +1,12 @@
-import { ThreadsService } from '../backend/threadsService'
+import { ThreadsService } from './threadsService'
 
+/**
+ * Handle requests related to a single thread, with an `id` prop in the query.
+ *
+ * Allows GET & PATCH operations.
+ *
+ * ⭐️ Bonus points: add the ability to DELETE a thread.
+ */
 export const controller = (req, res) => {
   if (req.method === 'GET') {
     const { id } = req.query

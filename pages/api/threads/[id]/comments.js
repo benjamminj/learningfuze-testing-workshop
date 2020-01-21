@@ -1,1 +1,1 @@
-export { controller as default } from '../../../../src/api/comments'
+export { controller as default } from '../../../../src/backend/commentsController'
