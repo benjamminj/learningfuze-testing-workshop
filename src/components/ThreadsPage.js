@@ -54,7 +54,7 @@ const Thread = ({ id, title, description, comments, reactions }) => {
 export const ThreadsPage = ({ threads: initialThreads }) => {
   const [threads, setThreads] = useState(initialThreads)
   return (
-    <div style={{ padding: '16px' }}>
+    <div>
       {threads.map(thread => (
         <Thread key={thread.id} {...thread} />
       ))}

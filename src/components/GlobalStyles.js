@@ -5,7 +5,14 @@ export const GlobalStyles = () => {
         :root {
           --primary-050: #e6f6ff;
           --primary-100: #bae3ff;
+          --primary-200: #7cc4fa;
+          --primary-300: #47a3f3;
+          --primary-400: #2186eb;
           --primary-500: #0967d2;
+          --primary-600: #0552b5;
+          --primary-700: #03449e;
+          --primary-800: #01337d;
+          --primary-900: #002159;
 
           --neutral-050: #f5f7fa;
           --neutral-100: #e4e7eb;
@@ -29,7 +36,7 @@ export const GlobalStyles = () => {
         }
 
         body {
-          font-family: Menlo, monospace;
+          padding: 16px;
         }
 
         body,
@@ -39,16 +46,35 @@ export const GlobalStyles = () => {
         h4,
         h5,
         h6,
-        p {
+        p,
+        button,
+        input,
+        textarea {
           margin: 0;
           font-size: 1rem;
+          font-family: Menlo, monospace;
         }
 
         input,
         textarea {
-          font-size: 1rem;
           line-height: 1.5;
           padding: 12px 16px;
+        }
+
+        p {
+          word-break: break-word;
+        }
+
+        ul {
+          padding: 0;
+        }
+
+        a {
+          color: var(--primary-500);
+        }
+
+        a:visited {
+          color: var(--primary-700);
         }
       `}</style>
     </>

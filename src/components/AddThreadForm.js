@@ -1,50 +1,7 @@
 import { useState } from 'react'
-
-const inputStyles = {
-  width: '100%',
-  border: '2px solid var(--neutral-100)',
-}
-const labelStyles = {
-  display: 'block',
-  fontSize: '1rem',
-}
-const Input = ({ label, name, id, value, onChange, ...props }) => {
-  return (
-    <div>
-      <label htmlFor={id} style={labelStyles}>
-        {label}
-      </label>
-      <input
-        {...props}
-        type="text"
-        style={inputStyles}
-        name={name}
-        id={id}
-        value={value}
-        onChange={onChange}
-      />
-    </div>
-  )
-}
-
-const TextArea = ({ label, name, id, value, onChange, ...props }) => {
-  return (
-    <div>
-      <label style={labelStyles} htmlFor={id}>
-        {label}
-      </label>
-      <textarea
-        {...props}
-        style={{ ...inputStyles, resize: 'vertical' }}
-        id={id}
-        name={name}
-        value={value}
-        rows={10}
-        onChange={onChange}
-      />
-    </div>
-  )
-}
+import { Input } from './Input'
+import { TextArea } from './TextArea'
+import { Button } from './Button'
 
 export const AddThreadForm = ({ onSubmit }) => {
   const [title, setTitle] = useState('')
@@ -65,28 +22,35 @@ export const AddThreadForm = ({ onSubmit }) => {
           value={title}
           label="Title"
           onChange={ev => setTitle(ev.target.value)}
+          required
         />
 
         <TextArea
+          style={{ margin: '16px 0' }}
           id="threadContent"
           id="threadContent"
           value={content}
           name={'content'}
           label="Content"
           onChange={ev => setContent(ev.target.value)}
+          required
         />
 
-        <button type="submit">Submit</button>
-        <button type="button" onClick={() => setIsOpen(false)}>
-          hide form
-        </button>
+        <Button
+          type="submit"
+          style={{
+            background: 'var(--neutral-600)',
+            color: 'var(--white)',
+            marginRight: '8px',
+          }}
+        >
+          Submit
+        </Button>
+
+        <Button onClick={() => setIsOpen(false)}>Hide form</Button>
       </form>
     )
   }
 
-  return (
-    <button type="button" onClick={() => setIsOpen(true)}>
-      add a thread
-    </button>
-  )
+  return <Button onClick={() => setIsOpen(true)}>Add a thread</Button>
 }
