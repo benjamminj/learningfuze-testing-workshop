@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { sumValues } from '../utils/sumValues'
 
 /**
  * Small style wrapper around this `p` tag.
@@ -35,11 +36,7 @@ export const ThreadPreview = ({
   comments,
   reactions,
 }) => {
-  const reactionsCount = Object.values(reactions).reduce(
-    (sum, val) => val + sum,
-    0
-  )
-
+  const reactionsCount = sumValues(Object.values(reactions))
   const commentsCount = comments.length
 
   return (

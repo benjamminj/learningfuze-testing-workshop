@@ -5,6 +5,7 @@ import { AddCommentForm } from './AddCommentForm'
 import { useState, useEffect } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { Button } from './Button'
+import { request } from '../utils/fetchFromApi'
 
 /**
  * Renders the profile for an individual post.
@@ -32,7 +33,7 @@ export const ThreadProfilePage = ({ thread }) => {
       if (value > 0) filteredReactions[reaction] = value
     }
 
-    fetch(`/api/threads/${thread.id}`, {
+    request(`/api/threads/${thread.id}`, {
       method: 'PATCH',
       body: JSON.stringify({
         reactions: filteredReactions,
@@ -94,12 +95,10 @@ export const ThreadProfilePage = ({ thread }) => {
       </h2>
       <AddCommentForm
         onSubmitForm={form =>
-          fetch(`/api/threads/${thread.id}/comments`, {
+          request(`/api/threads/${thread.id}/comments`, {
             method: 'POST',
             body: JSON.stringify(form),
-          })
-            .then(res => res.json())
-            .then(newComment => setComments(comments.concat([newComment])))
+          }).then(newComment => setComments(comments.concat([newComment])))
         }
       />
 
@@ -124,9 +123,7 @@ export const ThreadProfilePage = ({ thread }) => {
 ThreadProfilePage.getInitialProps = async ctx => {
   const { threadId } = ctx.query
 
-  const thread = await fetch(ROOT_URL + `/api/threads/${threadId}`).then(res =>
-    res.json()
-  )
+  const thread = await request(`/api/threads/${threadId}`)
 
   return { thread }
 }

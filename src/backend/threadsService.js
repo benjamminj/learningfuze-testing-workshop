@@ -1,5 +1,5 @@
 import { threads, comments } from './threadsData'
-import { generateId } from './generateId'
+import { generateId } from '../utils/generateId'
 
 /**
  * ThreadsService is the only thing that communicates back-and-forth with our

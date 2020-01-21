@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { AddThreadForm } from './AddThreadForm'
 import { ThreadPreview } from './ThreadPreview'
+import { request } from '../utils/fetchFromApi'
 
 /**
  * Renders a list of all threads in the app as preview cards.
@@ -21,14 +22,12 @@ export const ThreadsPage = ({ threads: initialThreads }) => {
       <div style={{ marginTop: '32px' }}>
         <AddThreadForm
           onSubmit={form => {
-            fetch('/api/threads', {
+            request('/api/threads', {
               method: 'POST',
               body: JSON.stringify(form),
-            })
-              .then(res => res.json())
-              .then(thread =>
-                setThreads(prevThreads => prevThreads.concat([thread]))
-              )
+            }).then(thread =>
+              setThreads(prevThreads => prevThreads.concat([thread]))
+            )
           }}
         />
       </div>
@@ -44,6 +43,6 @@ export const ThreadsPage = ({ threads: initialThreads }) => {
  * For more on `getInitialProps`, check out [this link](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps)
  */
 ThreadsPage.getInitialProps = async () => {
-  const threads = await fetch(ROOT_URL + '/api/threads').then(res => res.json())
+  const threads = await request('/api/threads')
   return { threads }
 }
