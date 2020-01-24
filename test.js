@@ -8,6 +8,7 @@ function test(description, callback) {
     console.log('✅', description)
   } catch (error) {
     console.log('🚨', description, error)
+    throw error
   }
 }
 
