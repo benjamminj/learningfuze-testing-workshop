@@ -1,4 +1,4 @@
-### 01 Set up the repository
+### Set up the repository
 
 https://github.com/benjamminj/learningfuze-workshop-setting-up-tests
 
@@ -44,7 +44,7 @@ git checkout {upstream branch name}
 yarn
 ```
 
-## 02 Continuous Integration
+## Continuous Integration
 
 ### What is "continuous integration" (CI)?
 
@@ -121,7 +121,7 @@ git push origin testing-workshop
 
 Congrats! We've set up Travis to run `yarn test` on every pushed commit, and now we can go about setting up our tests with the knowledge that every commit will be checked against the test suite.
 
-## 03 Making our own testing framework
+## Making our own testing framework
 
 Printing a message to the console in CI isn't exactly valuable, so we're gonna add a test script that we can run to check our code. Throughout the rest of the workshop we'll be using [Jest](TODO:) and [Cypress](TODO:) to write our tests, but before we set those up we're gonna take a step back and build our own "test runner".
 
@@ -281,9 +281,33 @@ test('sumValues > should return 10 when adding 1, 2, 3, and 4', () => {
 })
 ```
 
+_Fun fact—`assert` is built-in with Node, so we actually don't even need our custom `assert` function! If we delete `assert` and add an import at the top of our file everything should still work perfectly!_. (It's good that we made our own, it's very close to what `assert` does under the hood).
+
+```js
+// test.js
+import assert from 'assert'
+import { sumValues } from './src/utils/sumValues'
+
+function test(description, callback) {
+  try {
+    callback()
+    console.log('✅', description)
+  } catch (error) {
+    console.error('🚨', description, error)
+    throw error.
+  }
+}
+
+test('sumValues > should return 10 when adding 1, 2, 3, and 4', () => {
+  const result = sumValues([1, 2, 3, 4])
+
+  assert(result === 10, `expected 10 but recieved ${result}`)
+})
+```
+
 With that we're ready to add some more of our own tests! As an exercise, let's add some additional tests for `sumValues`.
 
-### 💻 Exercise #1
+## 💻 Exercise #1
 
 I've added two empty tests with descriptions to `test.js`. Add code to make both of the tests run and pass.
 
@@ -302,5 +326,167 @@ test("sumValues > should filter out any strings that can't be transformed into a
 
 _Note: if you've set up the two tests correctly they will fail when you first run them against `sumValues`. To verify that the tests pass go to the `sumValues` file and uncomment the fixed code (or update the function to fix the bugs on your own for bonus points!)._
 
-<!-- TODO: flip on Jest -->
-<!-- TODO: exercise testing mapValues -->
+## Swapping over to Jest
+
+Now that we've got a few tests and we understand what's happening under the hood with our testing framework, it's time to add Jest to the project. I've already installed `Jest` as a `devDependency`, but if you're creating this from scratch you would need to install `jest`.
+
+```bash
+yarn add --dev jest
+```
+
+With Jest installed we can modify `package.json` to run `jest` instead of our Node script.
+
+```json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+Let's run `yarn test` and see what happens. You'll notice that our tests failed even though all of the preexisting tests in `test.js` ran! 😱
+
+You should see an error message saying something like this:
+
+```
+Your test suite must contain at least one test.
+```
+
+The reason for this is that Jest needs us to use its version of `test` so that it can pick up the tests. Jest already knows to run any files with `test.js` in the name (as well as a few other patterns which you can see [here](TODO: link)), but we'll need to update our `test` function.
+
+Fortunately Jest comes with a `test` function built-in and added as a global variable, and it takes the exact same arguments as the `test` function that we wrote! So all we need to do is delete our `test` function and everything should work. 🔥
+
+```js
+// test.js
+import assert from 'assert'
+import { sumValues } from './src/utils/sumValues'
+
+test('sumValues > should return 10 when adding 1, 2, 3, and 4', () => {
+  const result = sumValues([1, 2, 3, 4])
+
+  assert(result === 10, `expected 10 but recieved ${result}`)
+})
+```
+
+Now if you run `yarn test` you should see the output from Jest! Jest works fine with `assert` but we can swap this for the built-in assertions that come with Jest.
+
+### Swapping to `expect`
+
+Jest assertions are provided via another global function—`expect`. `expect` has two main parts, the `actual` and the `expected`. An `expect` assertion looks like this:
+
+```js
+expect(actual).toEqual(expected)
+```
+
+There's tons of methods on `expect` that we can use, but for this workshop we'll mostly be using `toEqual`. It does a deep equality check to make sure the values for the left and right sides are equal. Let's update our test to use `expect` instead of `assert`.
+
+```js
+// test.js
+import { sumValues } from './src/utils/sumValues'
+
+test('sumValues > should return 10 when adding 1, 2, 3, and 4', () => {
+  const result = sumValues([1, 2, 3, 4])
+
+  expect(result).toEqual(10)
+})
+```
+
+### Updating our file system
+
+Next, we're gonna do a little bit of reorganization to _colocate_ our tests with the code that they test. Jest automatically picks up any files matching `test.js`, `.test.js`, and files inside of a `__tests__` folder. I typically like to put all my tests as `.test.js` files inside a `__tests__` folder in the same directory as the code that they're testing.
+
+Let's add a new folder at `src/utils/__tests__`, and we'll create a `sumValues.test.js` file inside of it. You directory structure should look like this:
+
+```
+src
+├ utils
+│  ├ __tests__
+│  │   |⎼ sumValues.test.js
+│  ├ sumValues.js
+│  ├ (other util files)
+```
+
+Then we'll copy over the code from `test.js` into `src/utils/__tests__/sumValues.test.js` and update the imports appropriately. Once you've done this you can go ahead and delete `test.js`.
+
+```js
+// src/utils/__tests__/sumValues.test.js
+import { sumValues } from '../sumValues'
+
+test('should return 10 when adding 1, 2, 3, and 4', () => {
+  const result = sumValues([1, 2, 3, 4])
+
+  expect(result).toEqual(10)
+})
+```
+
+You should be able to run `yarn test` and nothing will have changed, only the file paths. 😎
+
+Setting up our tests like this allows our tests to scale with our app. Rather than having a giant `tests` directory at the root of the app (common in some testing approaches) we have our unit tests nicely located near the code that we're testing. This means that no matter whether your app is a few hundred lines of code or hundreds of thousands, the unit tests will only be a directory away from the code itself. Additionally, if you ever decide to move folders around you don't have to go update the tests!
+
+### Describe
+
+One last thing we can do to "jestify" our test is add a test suite block around our tests. While this isn't required, it's good practice to have a wrapper around the group of tests to keep them organized.
+
+In Jest we can use `describe` (another global variable added by Jest) to group our tests into blocks. Let's add a `describe` around our tests.
+
+```js
+// src/utils/__tests__/sumValues.test.js
+import { sumValues } from '../sumValues'
+
+describe('sumValues', () => {
+  test('should return 10 when adding 1, 2, 3, and 4', () => {
+    const result = sumValues([1, 2, 3, 4])
+
+    expect(result).toEqual(10)
+  })
+
+  // other tests
+})
+```
+
+You can have multiple `describe`s in a single file—they're incredibly handy at separating groups of tests if you've got multiple functions in a single file that you want to test.
+
+```js
+import { a, b } from 'sample'
+
+describe('a', () => {
+  test('something testing a', () => {})
+})
+
+describe('b', () => {
+  test('something testing b', () => {})
+})
+```
+
+## 💻 Exercise #2
+
+Create a new test file inside `src/utils/__tests__` named `map.test.js`. Import the `map` function and write some tests to cover its functionality. If you find bugs feel free to modify the `map` function, but remember to write a failing test first!
+
+Use the `expect` assertions provided by Jest.
+
+> Tip: if you're having trouble trying to figure out _what_ to test, try reading the comments and code inside the `map` function. I've left a bit of documentation about what it's supposed to do.
+
+```js
+// map.test.js
+import { map } from '../map'
+
+describe('map', () => {
+  // write your tests here
+})
+```
+
+## Mocking
+
+<!-- TODO: -->
+
+## Test Coverage
+
+<!-- TODO: -->
+
+## Integration testing
+
+<!-- TODO: -->
+
+## End-to-end testing
+
+<!-- TODO: -->

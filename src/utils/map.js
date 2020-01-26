@@ -8,6 +8,9 @@
  *
  * // returns [2, 4, 6, 8]
  * ```
+ *
+ * Similar to Array.prototype.map, `map` does not mutate the original array, instead
+ * it creates a new array.
  */
 export const map = (array, callback) => {
   const newArray = []
