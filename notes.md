@@ -1248,7 +1248,15 @@ For now, just update the coverage numbers to be slightly below where they curren
 Now that we've got our `test:cov` command dialed in, let's make sure that it runs in CI. This will guarantee that anyone contributing to this codebase keeps the test coverage from dipping any lower.
 
 ```yml
-#
+# .travis.yml
+language: node_js
+
+node_js:
+  - 10.16.3
+
+# This allows us to change the script that Travis runs from the default "yarn test"
+# to whatever we want.
+script: yarn test:cov
 ```
 
 <!--
