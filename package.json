@@ -9,12 +9,26 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "test:cov": "jest --coverage"
   },
   "prettier": {
     "semi": false,
     "singleQuote": true,
     "trailingComma": "es5"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "./src/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
   },
   "dependencies": {
     "isomorphic-unfetch": "^3.0.0",
@@ -23,6 +37,7 @@
     "react-dom": "^16.12.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.8.3",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "esm": "^3.2.25",
     "jest": "^25.1.0",

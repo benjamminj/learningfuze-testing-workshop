@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { AddThreadForm } from './AddThreadForm'
 import { ThreadPreview } from './ThreadPreview'
-import { request } from '../utils/fetchFromApi'
+import { request } from '../utils/request'
 
 /**
  * Renders a list of all threads in the app as preview cards.

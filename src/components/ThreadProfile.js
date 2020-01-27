@@ -5,7 +5,7 @@ import { AddCommentForm } from './AddCommentForm'
 import { useState, useEffect } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { Button } from './Button'
-import { request } from '../utils/fetchFromApi'
+import { request } from '../utils/request'
 
 /**
  * Renders the profile for an individual post.
