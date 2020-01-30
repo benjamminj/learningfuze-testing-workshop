@@ -1,4 +1,4 @@
-### Set up the repository
+### Set up the repository (5)
 
 https://github.com/benjamminj/learningfuze-workshop-setting-up-tests
 
@@ -44,7 +44,7 @@ git checkout {upstream branch name}
 yarn
 ```
 
-## Continuous Integration
+## Continuous Integration (15)
 
 ### What is "continuous integration" (CI)?
 
@@ -121,7 +121,7 @@ git push origin testing-workshop
 
 Congrats! We've set up Travis to run `yarn test` on every pushed commit, and now we can go about setting up our tests with the knowledge that every commit will be checked against the test suite.
 
-## Making our own testing framework
+## Making our own testing framework (30)
 
 Printing a message to the console in CI isn't exactly valuable, so we're gonna add a test script that we can run to check our code. Throughout the rest of the workshop we'll be using [Jest](TODO:) and [Cypress](TODO:) to write our tests, but before we set those up we're gonna take a step back and build our own "test runner".
 
@@ -307,7 +307,7 @@ test('sumValues > should return 10 when adding 1, 2, 3, and 4', () => {
 
 With that we're ready to add some more of our own tests! As an exercise, let's add some additional tests for `sumValues`.
 
-## 💻 Exercise #1
+## 💻 Exercise #1 (10)
 
 I've added two empty tests with descriptions to `test.js`. Add code to make both of the tests run and pass.
 
@@ -326,7 +326,7 @@ test("sumValues > should filter out any strings that can't be transformed into a
 
 _Note: if you've set up the two tests correctly they will fail when you first run them against `sumValues`. To verify that the tests pass go to the `sumValues` file and uncomment the fixed code (or update the function to fix the bugs on your own for bonus points!)._
 
-## Swapping over to Jest
+## Swapping over to Jest (5)
 
 Now that we've got a few tests and we understand what's happening under the hood with our testing framework, it's time to add Jest to the project. I've already installed `Jest` as a `devDependency`, but if you're creating this from scratch you would need to install `jest`.
 
@@ -458,7 +458,7 @@ describe('b', () => {
 })
 ```
 
-## 💻 Exercise #2
+## 💻 Exercise #2 (10)
 
 Create a new test file inside `src/utils/__tests__` named `map.test.js`. Import the `map` function and write some tests to cover its functionality. If you find bugs feel free to modify the `map` function, but remember to write a failing test first!
 
@@ -475,7 +475,7 @@ describe('map', () => {
 })
 ```
 
-## Review: unit tests
+## Review: unit tests (5)
 
 <!--
 TODO:
@@ -488,7 +488,7 @@ qualities of a unit test
 arrange -> act -> assert
  -->
 
-## Intro to mocking
+## Intro to mocking (5)
 
 This is great, we've got our test suite for a few pure utility functions, but what do we do when what we're testing isn't pure? If the code has side effects, how do we test _that_?
 
@@ -546,7 +546,7 @@ const myMockRequest = jest
 
 There's a few methods we'll use mocks to test our code with side-effects, let's put them to practice in our codebase!
 
-## Mocking with dependency injection
+## Mocking with dependency injection (10)
 
 One common method of getting our mock into the code that we're testing is by using _dependency injection_ for our functions. If you're not familiar with dependency injection, here's a brief definition (some of the definitions you'll find out there are very detailed and complex):
 
@@ -663,7 +663,7 @@ expect(mockJson).toHaveBeenCalledWith([
 ])
 ```
 
-## 💻 Exercise 3
+## 💻 Exercise 3 (5)
 
 Add a test to `src/backend/__tests__/threadsController` to cover sending a `POST` request. Add mocks `req` and `res` inside of the `test` block to cover what you need.
 
@@ -724,7 +724,7 @@ test('should respond with status 201 and the created thread JSON', () => {
 
 </details>
 
-## Mocking an entire file
+## Mocking an entire file (10)
 
 Mocking via dependency injection is great, but chances are sooner or later you'll want to mock an entire file. Some people will support modifying your codebase so that you use dependency injection all over the place, thus making everything easier to test. But sometimes that's not ideal (or even desirable!). Let's take another look at the code for `threadsController`:
 
@@ -865,7 +865,7 @@ test('should respond with status 201 and the created thread JSON', () => {
 })
 ```
 
-## 💻 Exercise 4
+## 💻 Exercise 4 (5)
 
 Create a new test for the `commentsController` in `src/backend/__tests__/commentsController.test.js`. Add mocks for `req` and `res` (dependency injection) and for `ThreadsService` (file mock). Add a test for the `controller` function testing whether a comment is added and returned correctly as JSON.
 
@@ -880,7 +880,7 @@ TODO: finish answer
 
 </details>
 
-## Mocking global dependencies and npm modules
+## Mocking global dependencies and npm modules (5)
 
 Sometimes we'll need to mock more than our own code. Some global APIs (like `window` or `Math`) don't always give us what we want to recreate a test scenario. Furthermore, what do we do if we have a npm module that has side-effects?
 
@@ -1128,7 +1128,7 @@ describe('request', () => {
 })
 ```
 
-## 💻 Exercise 5
+## 💻 Exercise 5 (5)
 
 Create a new test file for `generateId` in `src/utils/__tests__/generateId.test.js`. This function relies on `Math.random` to create a unique id every time it is called. Mock out `Math.random` and write a test for `generateId`.
 
@@ -1147,7 +1147,7 @@ TODO: add answer
 
 ## ⏱ Organizing mocks for reuse (bonus content?)
 
-## Review: mocking
+## Review: mocking (5)
 
 <!--
 TODO:
@@ -1156,7 +1156,7 @@ TODO:
   - Mocking requires that you understand the interface that you're mocking—if you mock a function it should be something that returns the same shape as the original code.
 -->
 
-## Adding test coverage
+## Adding test coverage (5)
 
 Now that we've been adding tests to our codebase for a little while, it would be nice to know _how much_ of the codebase we've already tested. Even in a codebase of small size, going through and manually looking at which files have tests isn't efficient. Instead of doing this manually or flying blind, we can use Jest's built-in _code coverage reporter_ to tell us how much of our code is run by our tests.
 
@@ -1194,7 +1194,7 @@ Let's make it easier to run the coverage by adding a script to `package.json`
 }
 ```
 
-## Using a test coverage threshold to enforce test coverage in CI
+## Using a test coverage threshold to enforce test coverage in CI (5)
 
 Having the ability to view the test coverage isn't really all that useful if we can't enforce that it stays up. Especially if you're working in a team, it's a good idea to introduce a _coverage threshold_ and have your CI make sure that the metrics pass a certain bar.
 
@@ -1245,6 +1245,8 @@ For now, just update the coverage numbers to be slightly below where they curren
 }
 ```
 
+As time goes on, the test coverage will likely _increase_ as people become more comfortable with testing. Periodically revisit the coverage thresholds and increase them until your app is at a coverage level you're comfortable with.
+
 Now that we've got our `test:cov` command dialed in, let's make sure that it runs in CI. This will guarantee that anyone contributing to this codebase keeps the test coverage from dipping any lower.
 
 ```yml
@@ -1259,14 +1261,404 @@ node_js:
 script: yarn test:cov
 ```
 
-<!--
-TODO:
-1. add coverage threshold
-2. add command to instrument coverage
-3. update CI to use coverage command instead of `npm test`
- -->
+## A discussion on code coverage (5)
 
-## Integration testing
+There's a lot of opinions about what number is the ideal target for coverage metrics. The important thing to remember when using code coverage is that it's not a perfect metric for the quality of a test suite. Coverage just makes sure that the lines _ran_ in the tests, but they won't help you know the _quality_ of your tests.
+
+Some people will use this to write off coverage completely and fight against using a coverage threshold. Another common reason for dismissing coverage thresholds is the argument that 100% coverage is a waste of time. Pushing a codebase up to 100% coverage takes a lot of time and effort and you get diminishing returns as you go higher (getting from 90% to 95% doesn't really add as much extra security as going from 40% to 45%).
+
+While those both are true—getting to 100% coverage ends up being more trouble than it's worth, and high coverage doesn't speak to the quality of test, I have to disagree that these are reasons for writing off coverage altogether.
+
+Rather, these two bits mean that finding an ideal coverage target for your app is kind of a gray area. In my experience, 80% is a good number to shoot for when you're writing applications (and then you can shoot higher if the team wants to), and 95-100% is useful if you're writing tests for a library (or some module that's being heavily reused).
+
+## Intro to integration testing (5)
+
+We've spent quite a bit of time writing unit tests with Jest, now let's shift our focus to integration testing. Let's revisit our definition from before:
+
+> An **integration test** is a test that makes sure a combination of two or more modules is working as intended.
+
+Integration tests can run the full range of extremely small (practically a unit test) to very large (an entire page of the app). The key to differentiating integration tests from unit tests is whether we're _mocking dependencies_ or testing multiple modules together.
+
+That said, integration tests will still need to mock _something_. Typically the most that you'll be mocking in integration tests is the _next layer of the stack_. For example, if you're writing integration tests for frontend code, you'll be mocking the API calls to the backend. If you're writing integration tests for backend code, you'll be mocking the queries to the database.
+
+While _anything using 2 or modules_ can be classified as an integration test, for the purposes of our workshop we're gonna say that integration tests for backend will actually hit an endpoint but won't write to the database, and integration tests for frontend will actually render into a DOM, but they won't run in the browser or hit any real APIs.
+
+The good news is that we'll be able to write all of these integration tests inside of Jest, so we don't need to set up any new tools.
+
+## Integration testing for backend code (15)
+
+Let's start by writing an integration test for our backend code. We're gonna write some integration tests for our `getThreadById` controller. Let's create a new file, `src/backend/__tests__/getThreadById.integration.test.js`.
+
+> 💡 Note: For this workshop I'm naming the integration tests with `.integration.test.js` so we can easily see which files are examples of what type of test. Typically in a real app I wouldn't differentiate, I'd kinda just mix the integration and unit tests under `.test.js` patterns.
+
+Next, we'll need to install a couple of dependencies to make testing a little easier.
+
+```bash
+yarn add -D supertest express
+```
+
+We're gonna be using a tool called `supertest` in order to write integration tests for our API. The way that `supertest` works is by simulating a real server, letting you hit _endpoints_, and then you can assert on the way that your endpoints behave. However, all of this still happens inside of Jest, so we don't need to spin up a real browser or even a real server—`supertest` can make this happen on a per-test basis.
+
+The reason we're adding `express` as a dev dependency is due to how NextJS's server endpoints handle requests. `supertest` primarily works with the shapes provided by `express`, so we're gonna spin up a fake `express` server in our test so that we can test the endpoints using `supertest`.
+
+> 💡 Tip: each framework has its own "flavor" of testing that's considered the preferred approach. That said, if there isn't an "approved" approach you might have to write your own testing utilities or write an adapter to use another, more mature tool.
+
+We'll see this a little more clearly after writing some of our own tests, so let's set up our test for `threadByIdController`.
+
+```js
+// src/backend/__tests__/getThreadById.integration.test.js
+
+describe('threadByIdController', () => {
+  test('should respond 200 to a GET request', () => {
+    // arrange
+    // act
+    // assert
+  })
+
+  test('should respond 200 to a PATCH request with a valid body', () => {
+    // arrange
+    // act
+    // assert
+  })
+})
+```
+
+In order to use the NextJS endpoint handlers with `supertest` we'll need to transform them into a format that Express can properly parse. We don't want to change our actual code, so we'll add this adapter up above the `describe`.
+
+```js
+// src/backend/__tests__/getThreadById.integration.test.js
+
+// apiResolver is a utility from NextJS used inside of their server to format
+// the http requests. We're gonna use it to format our test requests.
+import { apiResolver } from 'next/dist/next-server/server/api-utils'
+
+// The first two arguments are the `req` and `res` from EXPRESS.
+// The `handler` arg will be a NEXTJS-style handler.
+// This function takes express-style arguments along with the nextjs handler and
+// transforms the arguments before passing them into our handler.
+const resolveApiHandler = (req, res, handler) => {
+  // The main difference between NextJS and Express is that route params (req.params)
+  // are put inside of `req.query` instead of `req.params`. We can just merge all the params
+  // and queries together inside of `req.query` before passing it along.
+  req.query = {
+    ...req.query,
+    ...req.params,
+  }
+
+  return apiResolver(req, res, req.params, handler)
+}
+
+describe('threadByIdController', () => {
+  // tests
+})
+```
+
+Now that we've got our resolver, let's create an express app with our handler attached to an endpoint. Add this above `describe`:
+
+```js
+// src/backend/__tests__/getThreadById.integration.test.js
+
+import express from 'express'
+import { apiResolver } from 'next/dist/next-server/server/api-utils'
+import { threadByIdController } from '../threadByIdController'
+
+// resolveApiHandler function
+
+const app = express()
+app.use('/threads/:id', (req, res) =>
+  resolveApiHandler(req, res, threadByIdController)
+)
+
+describe('threadByIdController', () => {
+  // tests
+})
+```
+
+> ⚠️ It bears repeating that writing this type of resolver isn't the "best" way to test your endpoints. If there's a good tool that works without a resolver for your framework of choice, I'd recommend that. I've found there aren't a lot of perfect solutions for _NextJS_ endpoints, but there are a lot of good solutions for bigger frameworks like Express, NestJS, Hapi, etc. But when there aren't good solutions immediately available, it's our job as software engineers to create solutions!
+
+Now that we've got our Express app set up and ready to recieve connections, let's fire off a request using `supertest`!
+
+```js
+// src/backend/__tests__/getThreadById.integration.test.js
+
+import express from 'express'
+import { apiResolver } from 'next/dist/next-server/server/api-utils'
+import request from 'supertest'
+import { threadByIdController } from '../threadByIdController'
+
+describe('threadByIdController', () => {
+  test('should respond 200 on a GET request', async () => {
+    const res = await request(app).get('/thread/n4uajfhps')
+
+    expect(res.status).toEqual(200)
+    expect(res.body).toEqual({
+      comments: [
+        { content: 'This is a comment', id: '5tvf1vv39', user: 'Ben Johnson' },
+        {
+          content: 'This is a comment from Test Tester',
+          id: '7sack1xhe',
+          user: 'Test Tester',
+        },
+      ],
+      content: 'This is the content for the thread',
+      id: 'n4uajfhps',
+      reactions: { '👍': 20, '🔥': 30 },
+      title: 'My first thread!',
+    })
+})
+```
+
+That first line of the test is all that we need to do in order to simulate an API request using `supertest`. We pass it our Express app and tell it which endpoint we want to send a `GET` request. We receive back a response that we can use to make our test assertions!
+
+Let's add a test for the `POST` request.
+
+```js
+// src/backend/__tests__/getThreadById.integration.test.js
+
+describe('threadByIdController', () => {
+  test('should respond 200 on a GET request', async () => {
+    // test that we just wrote
+  })
+
+  test('should respond 200 on a PATCH request', async () => {
+    const res = await request(app)
+      .patch('/thread/' + id)
+      // we have to send the content-type header for NextJS to know that it's recieving JSON.
+      .set('content-type', 'application/json')
+      // .send adds the object as JSON to the body.
+      .send({ name: '🔥' })
+
+    expect(res.status).toEqual(200)
+    expect(res.body).toEqual({
+      comments: ['5tvf1vv39', '7sack1xhe'],
+      content: 'This is the content for the thread',
+      id: 'n4uajfhps',
+      name: '🔥',
+      reactions: { '👍': 20, '🔥': 30 },
+      title: 'My first thread!',
+    })
+  })
+})
+```
+
+This is great, but there's still one thing left to do—our tests are still hitting the real DB. Let's add a mock for the DB so that our tests are always operating on the same data. Instead of doing the mock inline, I'm gonna do it inline, but chances are if we were in a bigger app we'd put it in a separate file to decrease the size of our test file and allow for reuse. For more on mocking an entire file [check out the Jest docs on file mocks](https://jestjs.io/docs/en/manual-mocks).
+
+Let's just copy-paste all of our initial `threadsData` into our mock. The only thing we'll change is the ids so that we can know for sure that our tests are using the mock. I'll use letters for thread ids and numbers (as strings) for the comment ids.
+
+```js
+// src/backend/__tests__/getThreadById.integration.test.js
+// imports
+
+jest.mock('../threadsData', () => {
+  return {
+    threads: {
+      a: {
+        id: 'a',
+        title: 'My first thread!',
+        content: 'This is the content for the thread',
+        comments: ['1', '3'],
+        reactions: {
+          '🔥': 30,
+          '👍': 20,
+        },
+      },
+      b: {
+        id: 'b',
+        title: 'Another cool thread',
+        content:
+          "This is the content for the second thread, it's got some stuffz",
+        comments: ['2'],
+        reactions: {
+          '🚀': 3,
+        },
+      },
+    },
+    comments: {
+      '1': {
+        id: '1',
+        user: 'Ben Johnson',
+        content: 'This is a comment',
+      },
+      '2': {
+        id: '2',
+        user: 'Ben Johnson',
+        content: 'This is another comment',
+      },
+      '3': {
+        id: '3',
+        user: 'Test Tester',
+        content: 'This is a comment from Test Tester',
+      },
+    },
+  }
+})
+
+// all of our other code
+```
+
+If you run the tests again you should get a few failures from the failed ids. Go through the tests right now and update the ids in your tests to match the test output so that all of our tests are passing.
+
+> 💡 Since our database is a simple file rather than a "real" database, we had to write our own mocks. However, if you're working with a more established DB (Postgres, MySQL, MongoDB), chances are there are already-built test utilities and mocks for that database that you can install so you don't have to do a custom mock for your DB.
+
+## 💻 Exercise 6 (5)
+
+<!-- TODO: write this portion -->
+
+## Integration testing for frontend code (15)
+
+Let's take a look at integration testing for our frontend code. In our frontend code our integration tests will do everything that they do in our real app, with the exception of two things: they won't render in a real browser, and they won't hit the actual API.
+
+We'll be using a tool called `@testing-library` to manage our testing. I'm a huge fan of `@testing-library`, and one of the main reasons is the testing philosophy it was built on top of:
+
+> The more your tests resemble the way your software is used, the more confidence they can give you.
+
+`@testing-library` has a base set of utilities which allow you to test any JavaScript app that runs in the browser—`@testing-library/dom`—as well as framework-specific versions (React, Vue, Angular, Reason, React Native, Svelte, etc) that wrap the `@testing-library/dom` library. Since we're working on a React app, let's install the `@testing-library/react` package (also referred to a `react-testing-library` or RTL).
+
+```bash
+yarn add --dev @testing-library/react
+```
+
+RTL works by rendering your component into the DOM and returning a set of utilities that let you select items out of the DOM. However, the utilities force you to select elements the same way you would if you were a real user—you select them by their text.
+
+Let's explore this by writing a test for our `Input` component. Create a new test in `src/components/__tests__/Input.test.js`
+
+```js
+// src/components/__tests__/Input.test.js
+import React from 'react'
+import { render } from '@testing-library/react'
+
+describe('<Input />', () => {
+  test('should render the input with a label', () => {
+    const helpers = render(
+      <Input label="Test" id="test" value="test" onChange={() => {}} />
+    )
+  })
+})
+```
+
+`helpers` is kind of a grab-bag for all of the DOM helpers that RTL provides for us. The most important ones that we'll be using are `helpers.getByText` (fetches a single DOM node by the text inside), `helpers.getByLabelText` (fetches a form field by its label), and `helpers.debug` (prints out the entire component rendered).
+
+It's also fairly common to destructure the helpers we need. Feel free to not if you don't want to. 😎 Let's fire off debug and see what we get!
+
+```js
+// src/components/__tests__/Input.test.js
+import React from 'react'
+import { render } from '@testing-library/react'
+
+describe('<Input />', () => {
+  test('should render the input with a label', () => {
+    const { debug } = render(
+      <Input label="Test" id="test" value="test" onChange={() => {}} />
+    )
+
+    debug()
+  })
+})
+```
+
+You'll see that `debug()` is the same thing as console logging our entire component! It's useful to remember that this utility exists so that if you get stuck trying to figure out _what_ to select.
+
+However, logging our component out isn't enough, we want to actually assert something on it. But what do we want to assert?
+
+Let's take a step back and think as if we were using this input. How would we know that it was in the DOM? How would we know what it's for? We'd see the label and the input and start interacting with it.
+
+This is where RTL shines. We can just select our input by its label text, the same way we'd identify it as a regular manual user.
+
+```js
+// src/components/__tests__/Input.test.js
+import React from 'react'
+import { render } from '@testing-library/react'
+
+describe('<Input />', () => {
+  test('should render the input with a label', () => {
+    const { getByLabelText } = render(
+      <Input label="Test Label" id="test" value="test" onChange={() => {}} />
+    )
+
+    const input = getByLabelText('Test Label')
+  })
+})
+```
+
+Try changing the input's label inside of `render`. You should see your test fail because it can't find the label text.
+
+However, we can still make our test a bit stronger with an explicit assertion. To do this we'll need to pull in another file that RTL gives us that lets us add a few extra matchers to Jest's `expect` that are perfect for working with the DOM.
+
+```bash
+yarn add --dev @testing-library/jest-dom
+```
+
+```js
+// src/components/__tests__/Input.test.js
+import React from 'react'
+import { render } from '@testing-library/react'
+// Adds the extra matchers to Jest
+import '@testing-library/jest-dom/extend-expect'
+
+describe('<Input />', () => {
+  test('should render the input with a label', () => {
+    const { getByLabelText } = render(
+      <Input label="Test Label" id="test" value="test" onChange={() => {}} />
+    )
+
+    const input = getByLabelText('Test Label')
+    expect(input).toBeInTheDocument()
+  })
+})
+```
+
+The main matcher from `testing-library` that we'll be using is `toBeInTheDocument`. True to its name, it checks whether the selected node exists in the DOM.
+
+And that's it! We have our first component test!
+
+Let's add a second test that actually interacts with the component. We're gonna trigger an onchange event to the input and test that it actually handles user input correctly.
+
+```js
+// src/components/__tests__/Input.test.js
+import React from 'react'
+import { render } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+
+describe('<Input />', () => {
+  test('should render the input with a label', () => {})
+
+  test('should handle an onChange event', () => {
+    // Use a mock function so we can see if the onChange prop gets called
+    const onChange = jest.fn()
+
+    const { getByLabelText } = render(
+      <Input label="Test" id="test" value="test" onChange={onChange} />
+    )
+
+    // fireEvent comes from RTL and lets us trigger events on DOM nodes.
+    // The methods correspond to which event you want to trigger (ie fireEvent.click,
+    //  fireEvent.change, etc).
+    fireEvent.change(getByLabelText('Test'), {
+      target: { value: 'testz' },
+    })
+
+    // Assert our mock function was called.
+    expect(onChange).toHaveBeenCalled()
+  })
+})
+```
+
+## 💻 Exercise 7 (5)
+
+Create a new test in `src/components/__tests__/AddCommentForm.test.js` and write a test for the functionality of `AddCommentForm`.
+
+Think about how you would interact with this form and what the ideal result is. If it helps open up the app and play with the form a little bit and see what you do. Then write your test using RTL to select elements and trigger events.
+
+> 💡 Hint: the main reason we interact with each part of this form is so that we can submit, so our test should do all of the actions leading up to (and triggering) a form submission.
+
+```js
+```
+
+<details>
+  <summary>Expand to view the answer</summary>
+</details>
+
+## Review: integration testing (5)
 
 <!--
 Maybe:
@@ -1278,11 +1670,15 @@ Frontend
  -->
 <!-- TODO: -->
 
-## End-to-end testing
+## Intro to end-to-end testing (5)
 
 <!-- TODO: -->
 
-## Conclusion
+## Writing end-to-end tests with Cypress (15)
+
+## 💻 Exercise 8 (10)
+
+## Conclusion (5)
 
 ## Going the extra mile
 

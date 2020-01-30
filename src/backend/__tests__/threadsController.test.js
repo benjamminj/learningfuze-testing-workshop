@@ -1,4 +1,4 @@
-import { controller } from '../threadsController'
+import { threadsController } from '../threadsController'
 
 jest.mock('../threadsService', () => ({
   ThreadsService: {
@@ -50,7 +50,7 @@ describe('threadsController', () => {
     }
 
     // act
-    controller(req, res)
+    threadsController(req, res)
 
     // assert
     expect(res.status).toHaveBeenCalledWith(201)
@@ -77,7 +77,7 @@ describe('threadsController', () => {
     }
 
     // act
-    controller(req, res)
+    threadsController(req, res)
 
     // assert
     // Tip: use `toHaveBeenCalledTimes` since it explicitly protects against

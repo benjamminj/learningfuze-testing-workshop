@@ -5,7 +5,7 @@ import { ThreadsService } from './threadsService'
  *
  * Right now the only supported operation is creating a comment on a given thread.
  */
-export const controller = (req, res) => {
+export const commentsController = (req, res) => {
   if (req.method === 'POST') {
     const { id } = req.query
     const newComment = ThreadsService.addComment(id, JSON.parse(req.body))
