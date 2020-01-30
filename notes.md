@@ -1660,21 +1660,78 @@ Think about how you would interact with this form and what the ideal result is. 
 
 ## Review: integration testing (5)
 
-<!--
-Maybe:
-  setupTests?
-Backend
-  https://dev.to/metamas/testing-next-js-api-routes-55g3
-Frontend
-  RTL
- -->
-<!-- TODO: -->
-
 ## Intro to end-to-end testing (5)
 
-<!-- TODO: -->
+We've covered unit and integration tests, now let's take a brief look at end-to-end testing. Depending on your company, writing end-to-end tests might or might not fall under your job responsibilities as a software engineer. Typically if you're on a smaller team without QA it would fall on you, but if you have dedicated QA automation engineers they might write the end-to-end automation.
 
-## Writing end-to-end tests with Cypress (15)
+That said, it's a great skill to have and can greatly increase your speed when working on apps.
+
+End-to-end tests cover the entire application—they test the frontend, backend, _and_ the database. Typically we'd run these in a browser using some type of browser automation tool like Selenium or Cypress.
+
+Because end-to-end tests have to spin up an entire browser, they take a lot longer to run and are therefore much more "expensive". As a result you likely wouldn't want to have all of the tests for your app written as end-to-end tests, they're much better for testing the really important user flows. These would be the paths that people commonly go down or that you _really_ don't want to break.
+
+We'll be writing our end-to-end tests using [Cypress](TODO: link). It's one of the best end-to-end testing tools available today and certainly one of my favorites.
+
+## Setting up end-to-end tests with Cypress (15)
+
+Let's get started with some Cypress tests. 😍
+
+First, we'll install Cypress.
+
+```bash
+yarn add --dev cypress
+```
+
+Similar to Jest, Cypress looks for a specific file pattern by default in order to determine what the test files. In order to get up and running with our first Cypress test we'll need to add a few new files.
+
+First, add a `cypress` folder at the root of the project. Inside of that folder create an `integration` folder. This is where Cypress looks to find the test files
+
+> Note: we colocated our unit and integration tests inside of `__tests__` folders, but for end-to-end tests it makes more sense to keep them in a separate directory. This is because the end-to-end tests might be covering multiple pages, modules, and even apps. Depending on the size and architecture of your app it might actually make sense to have your end-to-end tests be in a completely separate repository!
+
+Let's also add a `cypress.json` file at the root of the app. This is where we'll put all the config for Cypress.
+
+```json
+// cypress.json
+{}
+```
+
+Your directory structure should look something like this:
+
+```bash
+cypress
+├ cypress.json
+src
+cypress.json
+package.json
+README.md
+# other folders and config files at the root
+```
+
+Now that we've got our directories all set up, create a new file at `cypress/integration/e2e_spec.js`. We'll set this one up with a similar wrapper to our Jest tests.
+
+```js
+describe('threads list & profile', () => {
+  it('should allow viewing a thread profile from the list', () => {
+    console.log('it passes')
+  })
+})
+```
+
+> Note: It's fairly common in the testing world to name test files with `_spec` instead of `.test`. I'm naming the Cypress tests with `_spec` for two main reasons—first, it's the preferred naming pattern that Cypress uses in their docs, and second, if we name it with `.test` the Cypress tests will get picked up by Jest when we run `yarn test`. By naming with `_spec` we avoid this conflict without having to configure Jest to ignore Cypress (which can be done—you can set up Jest to ignore certain file patterns but it doesn't come by default).
+
+If we run Cypress we should see our test open in a new instance of Chrome. Let's add a script to our `package.json`.
+
+```json
+{
+  "scripts": {
+    "e2e": "cypress open"
+  }
+}
+```
+
+And then we run it with `yarn e2e`. You should see a prompt from Cypress asking us which test we want to run. Click on `e2e_spec.js` and it should open our test in Chrome!
+
+## Writing our end-to-end test
 
 ## 💻 Exercise 8 (10)
 
