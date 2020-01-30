@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import { ROOT_URL } from '../constants'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { AddThreadForm } from './AddThreadForm'
 import { ThreadPreview } from './ThreadPreview'

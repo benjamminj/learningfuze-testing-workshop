@@ -1,3 +1,5 @@
+import React from 'react'
+
 /**
  * This functions as an "index.css" file for the entire app. It handles a few things:
  *
