@@ -1,5 +1,3 @@
-import fetch from 'isomorphic-unfetch'
-import { ROOT_URL } from '../constants'
 import React, { useState } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { AddThreadForm } from './AddThreadForm'
@@ -24,10 +22,10 @@ export const ThreadsPage = ({ threads: initialThreads }) => {
           onSubmit={form => {
             request('/api/threads', {
               method: 'POST',
-              body: JSON.stringify(form),
-            }).then(thread =>
+              body: form,
+            }).then(thread => {
               setThreads(prevThreads => prevThreads.concat([thread]))
-            )
+            })
           }}
         />
       </div>

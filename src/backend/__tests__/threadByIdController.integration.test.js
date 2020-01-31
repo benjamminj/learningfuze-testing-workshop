@@ -54,7 +54,7 @@ const resolveApiHandler = handler => (req, res) => {
     ...req.query,
     ...req.params,
   }
-  // return handler(req, res)
+
   return apiResolver(req, res, req.params, handler)
 }
 

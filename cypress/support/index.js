@@ -16,5 +16,19 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+// Cypress.on('window:before:load', win => {
+//   // win.fetch = null
+// })
+
+let polyfill
+
+before(() => {
+  cy.readFile('node_modules/whatwg-fetch/dist/fetch.umd.js').then(
+    contents => (polyfill = contents)
+  )
+
+  Cypress.on('window:before:load', win => {
+    delete win.fetch
+    win.eval(polyfill)
+  })
+})

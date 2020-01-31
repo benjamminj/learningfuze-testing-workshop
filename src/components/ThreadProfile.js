@@ -97,7 +97,7 @@ export const ThreadProfilePage = ({ thread }) => {
         onSubmitForm={form =>
           request(`/api/threads/${thread.id}/comments`, {
             method: 'POST',
-            body: JSON.stringify(form),
+            body: form,
           }).then(newComment => setComments(comments.concat([newComment])))
         }
       />

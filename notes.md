@@ -1688,11 +1688,13 @@ First, add a `cypress` folder at the root of the project. Inside of that folder 
 
 > Note: we colocated our unit and integration tests inside of `__tests__` folders, but for end-to-end tests it makes more sense to keep them in a separate directory. This is because the end-to-end tests might be covering multiple pages, modules, and even apps. Depending on the size and architecture of your app it might actually make sense to have your end-to-end tests be in a completely separate repository!
 
-Let's also add a `cypress.json` file at the root of the app. This is where we'll put all the config for Cypress.
+Let's also add a `cypress.json` file at the root of the app. This is where we'll put all the config for Cypress. For now we'll just start with a `baseUrl` config.
 
 ```json
 // cypress.json
-{}
+{
+  "baseUrl": "http://localhost:3000"
+}
 ```
 
 Your directory structure should look something like this:
@@ -1711,7 +1713,8 @@ Now that we've got our directories all set up, create a new file at `cypress/int
 
 ```js
 describe('threads list & profile', () => {
-  it('should allow viewing a thread profile from the list', () => {
+  it('should allow creating a thread and viewing its profile', () => {
+    cy.visit('/')
     console.log('it passes')
   })
 })
@@ -1732,6 +1735,205 @@ If we run Cypress we should see our test open in a new instance of Chrome. Let's
 And then we run it with `yarn e2e`. You should see a prompt from Cypress asking us which test we want to run. Click on `e2e_spec.js` and it should open our test in Chrome!
 
 ## Writing our end-to-end test
+
+Right now our test will just hit our threads list, log out to the console and immediately pass. Let's add some stuff so that it's actually useful.
+
+Let's think about what we would do as a user if we were actually clicking through the app.
+
+1. First we would hit the "/" url to see the whole "threads list" page.
+2. Then we would click the "Add a thread" button to display the form.
+3. We'd fill the form out with our new thread and submit the form.
+4. We should see the form rendered to the list.
+5. We'll click the thread to view its profile.
+6. On the thread profile we'll do a few reactions, and add a comment.
+
+When we write this test we'll need to tell the browser exactly to do each of these things. We'll use the same concepts that we used in our integration tests with RTL ("the more your tests resemble the way your software is used, the more confidence they give you") and try to prefer selecting items by their labels, text, etc.
+
+Let's start out by putting all of our steps inside of the test as comments. Let's fill out the first two.
+
+```js
+describe('threads list & profile', () => {
+  it('should allow viewing a thread profile from the list', () => {
+    // 1. First we would hit the "/" url to see the whole "threads list" page.
+    cy.visit('/')
+
+    // 2. Then we would click the "Add a thread" button to display the form.
+    cy.contains('Add a thread').click()
+
+    // 3. We'd fill the form out with our new thread and submit the form.
+    // 4. We should see the form rendered to the list.
+    // 5. We'll click the thread to view its profile.
+    // 6. On the thread profile we'll do a few reactions, and add a comment.
+  })
+})
+```
+
+Cypress has all of its DOM utilities available on a global `cy` object. There's a [ton of helpers](https://docs.cypress.io/api/api/table-of-contents.html) on the `cy` object. It also chains in a very "JQuery-esque" fashion—meaning you can do things like `cy.get('.button').contains('Text')`.
+
+Cypress is also built with an _async-first_ approach—when you try to query the DOM Cypress knows to wait until the element appears in the DOM. If it doesn't appear in about 5 seconds, Cypress times out and fails the test.
+
+In what we've written so far, we've used `cy.visit()` to hit a url (it will be based on the `baseUrl` we configured in our `cypress.json`), `cy.contains` to select a DOM node containing the text "Add a thread" and then `.click()` to fire a click event on the selected node.
+
+Let's do steps 3-4.
+
+```js
+describe('threads list & profile', () => {
+  it('should allow viewing a thread profile from the list', () => {
+    // 1. First we would hit the "/" url to see the whole "threads list" page.
+    cy.server()
+    cy.visit('/')
+
+    // 2. Then we would click the "Add a thread" button to display the form.
+    cy.contains('Add a thread').click()
+
+    // 3. We'd fill the form out with our new thread and submit the form.
+    cy.contains('Title').click()
+    cy.focused().type('Test threadzzzzz')
+
+    cy.contains('Content').click()
+    cy.focused().type(
+      'This is the test thread content written by our e2e test 😎'
+    )
+
+    cy.route('POST', '/api/threads').as('createThread')
+    // 4. We should see the form rendered to the list.
+    cy.contains('Submit').click()
+
+    // 5. We'll click the thread to view its profile.
+    // 6. On the thread profile we'll do a few reactions, and add a comment.
+  })
+})
+```
+
+TODO: transition to 5
+
+```js
+describe('threads list & profile', () => {
+  it('should allow viewing a thread profile from the list', () => {
+    // 1. First we would hit the "/" url to see the whole "threads list" page.
+    cy.server()
+    cy.visit('/')
+
+    // 2. Then we would click the "Add a thread" button to display the form.
+    cy.contains('Add a thread').click()
+
+    // randomize the title a little
+    const title = `Test threadzzzzz ${Date.now().toString()}`
+
+    // 3. We'd fill the form out with our new thread and submit the form.
+    cy.contains('Title').click()
+    cy.focused().type(title)
+
+    cy.contains('Content').click()
+    cy.focused().type(
+      'This is the test thread content written by our e2e test 😎'
+    )
+
+    cy.route('POST', '/api/threads').as('createThread')
+    // 4. We should see the form rendered to the list.
+    cy.contains('Submit').click()
+
+    // 5. We'll click the thread to view its profile.
+    cy.wait('@createThread')
+
+    cy.get('a')
+      .contains(title)
+      .then($anchor => {
+        const href = $anchor.attr('href')
+        cy.wrap(href).as('threadId')
+      })
+
+    cy.get('a')
+      .contains(title)
+      .click()
+
+    cy.get('@threadId').then(id => {
+      cy.url().should('include', id)
+    })
+    // 6. On the thread profile we'll do a few reactions, and add a comment.
+  })
+})
+```
+
+TODO: transition to 6
+
+```js
+describe('threads list & profile', () => {
+  it('should allow viewing a thread profile from the list', () => {
+    // 1. First we would hit the "/" url to see the whole "threads list" page.
+    cy.server()
+    cy.visit('/')
+
+    // 2. Then we would click the "Add a thread" button to display the form.
+    cy.contains('Add a thread').click()
+
+    // randomize the title a little
+    const title = `Test threadzzzzz ${Date.now().toString()}`
+
+    // 3. We'd fill the form out with our new thread and submit the form.
+    cy.contains('Title').click()
+    cy.focused().type(title)
+
+    cy.contains('Content').click()
+    cy.focused().type(
+      'This is the test thread content written by our e2e test 😎'
+    )
+
+    cy.route('POST', '/api/threads').as('createThread')
+    // 4. We should see the form rendered to the list.
+    cy.contains('Submit').click()
+
+    // 5. We'll click the thread to view its profile.
+    cy.wait('@createThread')
+
+    cy.get('a')
+      .contains(title)
+      .then($anchor => {
+        const href = $anchor.attr('href')
+        cy.wrap(href).as('threadId')
+      })
+
+    cy.get('a')
+      .contains(title)
+      .click()
+
+    cy.get('@threadId').then(id => {
+      cy.url().should('include', id)
+      cy.route('PATCH', `/api/threads${id}`).as('patchThread')
+    })
+
+    // 6. On the thread profile we'll do a few reactions, and add a comment.
+    let count = 0
+    cy.wrap([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      .each(() => {
+        cy.contains('🔥').click()
+        cy.wait('@patchThread').then($call => {
+          count++
+        })
+      })
+      .then(() => {
+        expect(count).to.equal(10)
+      })
+
+    cy.contains('User').click()
+    cy.focused().type('benjamminj')
+
+    cy.contains('Content').click()
+    cy.focused().type('This is comment content')
+
+    cy.get('@threadId').then(id => {
+      cy.route('POST', `/api/threads/${id}/comments`).as('postComment')
+    })
+
+    cy.contains('Submit').click()
+
+    cy.wait('@postComment')
+
+    cy.contains('benjamminj').should('exist')
+    cy.contains('This is comment content').should('exist')
+  })
+})
+```
 
 ## 💻 Exercise 8 (10)
 

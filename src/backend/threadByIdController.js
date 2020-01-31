@@ -18,11 +18,12 @@ export const threadByIdController = (req, res) => {
 
   if (req.method === 'PATCH') {
     const { id } = req.query
-    const thread = ThreadsService.updateThread(
-      id,
-      // TODO: commentz on why this is this way.
-      JSON.parse(JSON.stringify(req.body))
-    )
+
+    if (typeof req.body === 'object') {
+      req.body = JSON.stringify(req.body)
+    }
+
+    const thread = ThreadsService.updateThread(id, JSON.parse(req.body))
     res.status(200).json(thread)
   }
 }

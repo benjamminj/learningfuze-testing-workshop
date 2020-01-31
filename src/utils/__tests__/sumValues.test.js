@@ -7,14 +7,14 @@ describe('sumValues', () => {
     expect(result).toEqual(10)
   })
 
-  test.skip('should return 10 if there are strings in the array', () => {
+  test('should return 10 if there are strings in the array', () => {
     const result = sumValues(['1', 2, 3, 4])
 
     expect(typeof result).toEqual('number')
     expect(result).toEqual(10)
   })
 
-  test.skip('should not add any strings that cannot be turned into numbers', () => {
+  test('should not add any strings that cannot be turned into numbers', () => {
     const result = sumValues(['a', 2, 3, 4])
 
     expect(result).toEqual(9)
