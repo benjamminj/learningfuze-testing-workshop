@@ -9,7 +9,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "echo \"running tests...\""
+    "test": "node -r esm ./test.js"
   },
   "prettier": {
     "semi": false,
