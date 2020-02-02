@@ -50,6 +50,7 @@
     "node-mocks-http": "^1.8.1",
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
+    "start-server-and-test": "^1.10.8",
     "supertest": "^4.0.2",
     "test-listen": "^1.1.0"
   }

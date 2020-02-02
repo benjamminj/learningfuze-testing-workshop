@@ -47,8 +47,11 @@ describe('threads list & profile', () => {
     cy.wrap([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
       .each(() => {
         cy.contains('🔥').click()
-        cy.wait('@patchThread').then($call => {
+
+        cy.wait('@patchThread').should($req => {
           count++
+          expect($req.request.body).to.have.property('reactions')
+          expect($req.request.body.reactions).to.have.property('🔥', count)
         })
       })
       .then(() => {
@@ -66,8 +69,6 @@ describe('threads list & profile', () => {
     })
 
     cy.contains('Submit').click()
-
-    cy.wait('@postComment')
 
     cy.contains('benjamminj').should('exist')
     cy.contains('This is comment content').should('exist')

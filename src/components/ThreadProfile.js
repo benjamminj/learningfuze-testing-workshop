@@ -35,9 +35,9 @@ export const ThreadProfilePage = ({ thread }) => {
 
     request(`/api/threads/${thread.id}`, {
       method: 'PATCH',
-      body: JSON.stringify({
+      body: {
         reactions: filteredReactions,
-      }),
+      },
     })
   }, [reactions])
 

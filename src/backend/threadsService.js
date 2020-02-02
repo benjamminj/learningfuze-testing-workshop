@@ -84,12 +84,16 @@ export class ThreadsService {
   static updateThread(id, threadDataUpdate) {
     const thread = threads[id]
 
+    console.log('update >>', threadDataUpdate.reactions)
+
     threads[id] = {
       ...thread,
       ...threadDataUpdate,
       // Make sure it isn't possible to override a thread's id
       id,
     }
+
+    // console.log(threads[id])
 
     return threads[id]
   }
