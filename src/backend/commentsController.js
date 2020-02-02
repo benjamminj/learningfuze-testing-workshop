@@ -8,6 +8,11 @@ import { ThreadsService } from './threadsService'
 export const commentsController = (req, res) => {
   if (req.method === 'POST') {
     const { id } = req.query
+
+    if (typeof req.body === 'object') {
+      req.body = JSON.stringify(req.body)
+    }
+
     const newComment = ThreadsService.addComment(id, JSON.parse(req.body))
     res.status(201).json(newComment)
   }

@@ -9,7 +9,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "node -r esm ./test.js"
+    "test": "jest"
   },
   "prettier": {
     "semi": false,
