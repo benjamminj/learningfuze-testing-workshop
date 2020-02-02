@@ -1,4 +1,6 @@
-### Set up the repository (5)
+## Intro to testing (30)
+
+## Set up the repository (5)
 
 https://github.com/benjamminj/learningfuze-workshop-setting-up-tests
 
