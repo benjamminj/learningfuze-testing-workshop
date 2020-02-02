@@ -16,19 +16,19 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-// Cypress.on('window:before:load', win => {
-//   // win.fetch = null
-// })
-
-let polyfill
-
 before(() => {
+  // Cypress doesn't support watching the fetch API, so we need to polyfill out fetch with
+  // XMLHttpRequest.
+  let polyfill
+
   cy.readFile('node_modules/whatwg-fetch/dist/fetch.umd.js').then(
     contents => (polyfill = contents)
   )
 
   Cypress.on('window:before:load', win => {
+    // Delete window.fetch so that all fetch requests go thru the polyfilled version
     delete win.fetch
+    // Add the polyfill.
     win.eval(polyfill)
   })
 })
