@@ -1,10 +1,8 @@
-import fetch from 'isomorphic-unfetch'
-import { ROOT_URL } from '../constants'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { AddThreadForm } from './AddThreadForm'
 import { ThreadPreview } from './ThreadPreview'
-import { request } from '../utils/fetchFromApi'
+import { request } from '../utils/request'
 
 /**
  * Renders a list of all threads in the app as preview cards.
@@ -24,10 +22,10 @@ export const ThreadsPage = ({ threads: initialThreads }) => {
           onSubmit={form => {
             request('/api/threads', {
               method: 'POST',
-              body: JSON.stringify(form),
-            }).then(thread =>
+              body: form,
+            }).then(thread => {
               setThreads(prevThreads => prevThreads.concat([thread]))
-            )
+            })
           }}
         />
       </div>

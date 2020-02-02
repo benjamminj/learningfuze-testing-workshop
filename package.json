@@ -8,21 +8,50 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "e2e": "cypress open"
   },
   "prettier": {
     "semi": false,
     "singleQuote": true,
     "trailingComma": "es5"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "./src/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 37,
+        "functions": 14.25,
+        "lines": 17,
+        "statements": 18
+      }
+    }
+  },
   "dependencies": {
+    "@testing-library/jest-dom": "^5.0.2",
+    "express": "^4.17.1",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^9.2.0",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.8.3",
+    "@testing-library/react": "^9.4.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "cypress": "^3.8.3",
+    "esm": "^3.2.25",
+    "jest": "^25.1.0",
+    "node-mocks-http": "^1.8.1",
     "prettier": "^1.19.1",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "start-server-and-test": "^1.10.8",
+    "supertest": "^4.0.2",
+    "test-listen": "^1.1.0"
   }
 }

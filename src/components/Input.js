@@ -1,3 +1,4 @@
+import React from 'react'
 import { inputStyles, labelStyles } from '../styles'
 
 /**

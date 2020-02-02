@@ -5,7 +5,7 @@ import { AddCommentForm } from './AddCommentForm'
 import { useState, useEffect } from 'react'
 import { GlobalStyles } from './GlobalStyles'
 import { Button } from './Button'
-import { request } from '../utils/fetchFromApi'
+import { request } from '../utils/request'
 
 /**
  * Renders the profile for an individual post.
@@ -35,9 +35,9 @@ export const ThreadProfilePage = ({ thread }) => {
 
     request(`/api/threads/${thread.id}`, {
       method: 'PATCH',
-      body: JSON.stringify({
+      body: {
         reactions: filteredReactions,
-      }),
+      },
     })
   }, [reactions])
 
@@ -97,7 +97,7 @@ export const ThreadProfilePage = ({ thread }) => {
         onSubmitForm={form =>
           request(`/api/threads/${thread.id}/comments`, {
             method: 'POST',
-            body: JSON.stringify(form),
+            body: form,
           }).then(newComment => setComments(comments.concat([newComment])))
         }
       />

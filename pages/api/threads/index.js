@@ -1,1 +1,1 @@
-export { controller as default } from '../../../src/backend/threadsController'
+export { threadsController as default } from '../../../src/backend/threadsController'

@@ -1,3 +1,5 @@
+import React from 'react'
+
 /**
  * Styled button. Override the default styles using the `style` prop.
  */
