@@ -1,8 +1,12 @@
 # Testing Software
 
-## Intro to testing (30)
+## Intro to testing
+
+<!-- Estimated time: 30 min -->
 
 ## Set up the repository (5)
+
+<!-- Estimated time: 5 min -->
 
 https://github.com/benjamminj/learningfuze-workshop-setting-up-tests
 
@@ -48,17 +52,18 @@ git checkout {upstream branch name}
 yarn
 ```
 
-## Continuous Integration (15)
+## Continuous Integration
+
+<!-- Estimated time: 15 min -->
 
 ### What is "continuous integration" (CI)?
 
 <details>
-<summary>Click to view answer</summary>
+<summary>Expand to view answer</summary>
 
-> CI is basically a service that runs your tests / scripts in a special environment — the value prop is that every check-in of code guarantees that certain checks are run.
+> CI is a service that runs your tests / scripts in a special environment—every check-in of code guarantees that certain checks are run.
 
 </details>
-```
 
 ### Setting up TravisCI
 
