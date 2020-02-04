@@ -3,6 +3,7 @@
 ## Intro to testing
 
 <!-- Estimated time: 30 min -->
+<!-- TODO: -->
 
 ## Set up the repository (5)
 
@@ -132,9 +133,180 @@ Congrats! We've set up Travis to run `yarn test` on every pushed commit, and now
 
 ## Intro to Unit tests
 
+<!-- Estimated time: 5-10 mins -->
+
+To start, let's define what a unit test is.
+
+> A unit test is an automated test that covers a single module of the software in isolation.
+
+Unit tests are the smallest building blocks of our testing suite—they're only concerned with a single _unit_ of the codebase. Most of the times this will be a single function, class, or component.
+
+The idea with writing unit tests is that we want to make sure that the pieces of our application are working correctly. If the pieces are broken, the application will certainly be broken, but if the pieces are working as intended we can reliably use them like Lego blocks to make our program.
+
+In order to keep our unit tests focused on a single module of the codebase, our unit tests need to possess a few key qualities.
+
+**Unit tests should be isolated.** A solid unit test should not be interconnected with other unit tests. As much as possible we want to keep the details of our test from affecting other tests. This means that we should be able to run our tests in any order without their behavior changing.
+
+**Unit tests should be limited in scope.** We'll cover integration tests in a little bit, but unit tests typically should stay focused on a single module.
+
+**Unit tests should be deterministic.** In software we use the term _deterministic_ to mean that something should behave the exact same way every time. As long as the actual program doesn't change, our tests should pass—whether we run them 1 time or 1,000 times, whether we run them now or in 6 months.
+
+### Arrange / Act / Assert
+
+When setting up unit tests it can sometimes be difficult to know where to start. I like to use this formula for setting up tests.
+
+**Arrange.** In the _arrange_ step, we set up anything that we need to in order for our test to run. If we're mocking (more on that to come) we'll set up our mocks in this step. If our function needs some fancy data structure as input we might spend a few lines of code setting up that structure. If the stuff we're testing is pure (side-effect free) and simple we might be able to skip this step.
+
+**Act.** This is where we actually run the code we're trying to test. If we were testing a function or class method this means calling it. If we were testing some type of event handler we would trigger the event. Regardless of _what causes our code to run_, we make sure that the actual code runs in this step. If your code _is a function_, it's also a good idea to capture that function's output in a variable.
+
+**Assert.** This is where we run checks to see whether our software actually behaved as intended. In our _act_ step we ran the code, so in this step we grab values from the _actual_ result of the code (either the return value or side-effect) and make sure that it matches what we _expect_ it to be if the code is not broken. If it doesn't match, this is where the test fails.
+
+One reason I love this pattern is it takes a little bit of the _magic_ out of writing tests. Another is that it's easy to remember—AAA. Completing the _act_ step is just running the code in the exact same way we would use it in our app. The _assert_ step is a little more difficult, since it will require us to know our testing framework's assertion helpers. The most difficult of the three steps is setting up our mocks in the _arrange_ step. We'll cover this in a little bit, but let's get comfortable with writing some tests that _don't need mocks_ first.
+
 ## Writing our first Jest test
 
-## 💻 Exercise #2 (10)
+Let's create new file for our first test! We'll create it at `src/utils/__tests__/sumValues.test.js`. Jest automatically looks through our project for anything in a `__tests__` folder as well as anything with `.test.js` in the name. (There's a few other patterns that Jest looks for, but these are the main ones that we're gonna be using.)
+
+First, we'll set up our test with a `describe` block and import our function. `describe` is a global function added by Jest that allows us to group our tests together into "suites".
+
+```js
+// src/utils/__tests__/sumValues.test.js
+
+describe('sumValues', () => {})
+```
+
+Next, we'll add a `test` block. `test` is another global function added by Jest that creates a new test. If you've worked with other testing frameworks like Mocha or Jasmine you might be familiar with `it`. `it` actually works in Jest, it's actually the exact same as `test`!
+
+For the first argument to `test`, we'll put a brief description of what our test should do. You'll notice I also added our "arrange/act/assert" steps as comments inside of the test itself.
+
+```js
+// src/utils/__tests__/sumValues.test.js
+
+describe('sumValues', () => {
+  test('should return 15 when adding 1, 2, 3, 4, 5', () => {
+    // arrange
+    // act
+    // assert
+  })
+})
+```
+
+Since `sumValues` is a _pure function_, we won't need to do anything for the `arrange` step. Let's move on to fill out the `act` step. We'll call our `sumValues` function with the arguments.
+
+```js
+// src/utils/__tests__/sumValues.test.js
+
+describe('sumValues', () => {
+  test('should return 15 when adding 1, 2, 3, 4, 5', () => {
+    // act
+    const sum = sumValues([1, 2, 3, 4, 5])
+
+    // assert
+  })
+})
+```
+
+In order to complete our `assert` step, we'll need to use Jest's [`expect`](https://jestjs.io/docs/en/expect) function. The `expect` function takes a single argument containing the output from our function and returns an object containing a ton of _assertion_ methods. There's tons of assertions built-in to `expect`, and you can even add custom ones! That said, the most important one we'll be using is `expect(actual).toEqual(expected)`.
+
+`.toEqual` runs a deep equality check between the `actual` value and the `expected` value, and fails the test if the two are not identical. While there's a lot of other assertions, `toEqual` is enough to get us through 80-90% of the unit tests that we will be writing. To be honest, we won't be using a lot of the assertions that Jest has to offer since `.toEqual` is good enough for what we need (not to mention that it lowers the overhead when people are reading our tests).
+
+Let's add an assertion to our test. We want to check that the `sum` variable is equal to `15`
+
+```js
+// src/utils/__tests__/sumValues.test.js
+
+describe('sumValues', () => {
+  test('should return 15 when adding 1, 2, 3, 4, 5', () => {
+    // act
+    const sum = sumValues([1, 2, 3, 4, 5])
+
+    // assert
+    expect(sum).toEqual(15)
+  })
+})
+```
+
+And now let's run our test! All we need to do is change the line in `package.json` that had our `test` script.
+
+```json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+Now all we need to do is run `yarn test` in our terminal and you should see Jest output that our test passed! We just wrapped up our first test!
+
+## 💻 Exercise #1
+
+<!-- Estimated time: 5-10 mins -->
+
+I've added `test` blocks for two more tests to `src/utils/__tests__/sumValues.test.js`. Write code for each of these tests so that they cover the test case.
+
+> ⚠️ Note: when you first write these tests, the test runner should fail if you've written them correctly. Once you've got both tests failing, go into `src/utils/sumValues` and uncomment the fleshed-out version of `sumValues` and the tests should pass.
+
+> 💡 Tip: If you find yourself typing `yarn test` into your terminal a lot, you can actually run Jest in **watch mode** by typing `yarn test --watch`. This will watch all files in your codebase and run your tests whenever you update a file (Jest is smart and will only run tests for files that changed since your last commit).
+
+```js
+// src/utils/__tests__/sumValues.test.js
+
+describe('sumValues', () => {
+  test('should return 15 when adding 1, 2, 3, 4, 5', () => {
+    // act
+    const sum = sumValues([1, 2, 3, 4, 5])
+
+    // assert
+    expect(sum).toEqual(15)
+  })
+
+  test('should return 15 when adding 1, 2, "3", 4, 5', () => {
+    // act
+    // assert
+  })
+  test('should return 10 when adding 1, 2, 3, 4, "5abc"', () => {
+    // act
+    // assert
+  })
+})
+```
+
+<details>
+  <summary>Expand to view answer:</summary>
+
+```js
+// src/utils/__tests__/sumValues.test.js
+
+describe('sumValues', () => {
+  test('should return 15 when adding 1, 2, 3, 4, 5', () => {
+    // act
+    const sum = sumValues([1, 2, 3, 4, 5])
+
+    // assert
+    expect(sum).toEqual(15)
+  })
+
+  test('should return 15 when adding 1, 2, "3", 4, 5', () => {
+    // act
+    const sum = sumValues([1, 2, '3', 4, 5])
+    // assert
+    expect(sum).toEqual(15)
+  })
+
+  test('should return 10 when adding 1, 2, 3, 4, "5abc"', () => {
+    // act
+    const sum = sumValues([1, 2, 3, 4, '5abc'])
+    // assert
+    expect(sum).toEqual(10)
+  })
+})
+```
+
+</details>
+
+## 💻 Exercise #2
+
+<!-- Estimated time: 5-10 min -->
 
 Create a new test file inside `src/utils/__tests__` named `map.test.js`. Import the `map` function and write some tests to cover its functionality. If you find bugs feel free to modify the `map` function, but remember to write a failing test first!
 
@@ -153,24 +325,35 @@ describe('map', () => {
 
 ## Review: unit tests (5)
 
-<!--
-TODO:
-definition of a unit test
-qualities of a unit test
-  - isolated
-  - tests the module
-  - asserts expected output for pure functions
-  - asserts expected behavior (side effects) for impure functions
-arrange -> act -> assert
- -->
+To recap what we've seen about unit tests so far—we can define a _unit test_ as an automated software test that is limited to a single _module_ (or unit) of the application. Since it is limited to a single portion of the application, unit tests should be isolated, independent and focused.
 
-## Intro to mocking (5)
+A strong unit test should be deterministic and always pass no matter how many times we run it. In order to achieve this determinism in our tests we can use the AAA formula while writing tests. We _arrange_ any mocks that we need, _act_ by running the code, and _assert_ upon the output.
 
-This is great, we've got our test suite for a few pure utility functions, but what do we do when what we're testing isn't pure? If the code has side effects, how do we test _that_?
+We looked at writing a few Jest tests— we organized our tests into suites with Jest's file-naming convention as well as a `describe` block. Then we added tests for our functions, using `expect` to write our assertions.
+
+## Intro to mocking
+
+<!-- Estimated time: 5 min -->
+
+This is great, we've got our test suite for a few pure utility functions, but what do we do when what we're testing isn't pure? It's a noble ideal to have only pure functions in a codebase, but sooner or later our app will need to have side-effects like interacting with a database or hitting an API.
+
+If the code has side effects, how do we test _that_?
 
 To test side effects we're gonna dive into something that tends to be one of the more confusing things about testing: mocking.
 
-If you've read any blogs on testing or seen stuff on LinkedIn and Twitter about testing, you might have heard the terms _mock_, _spy_, and _stub_ used interchangeably in reference to mocking.
+Let's define a quick working definition for mocking.
+
+> Mocking is replacing actual code in our application with custom, "test-only" code with the goal of making our tests more predictable.
+
+There's a couple important things to note about this definition. First off, we're _replacing the code_ with _custom_ code. Furthermore, the code that we're using as a replacement is only intended to be run in the test environment. However, the most important part of this definition is the _why_ of mocking: we do it to make our code with side-effects more reliable.
+
+This all comes down to the _determinism_ aspect of unit tests. If we're hitting the network, that means that we open up our tests to potential failure _because the internet is down_. Or if we're hitting a database we don't want tests to randomly fail because of connection issues.
+
+That's what mocks are for—they help us increase the reliability of our tests. While we won't mock heavily in every test we write (for example our integration and end-to-end tests), we _will_ mock some things in our unit tests.
+
+> When tests are unreliable and they randomly fail, what inevitably happens is people start to lose trust in the testing suite. Having a test suite you don't trust is kind of pointless since the main goal of testing is to provide confidence. We want to have the security that our tests will only fail if the code they're testing is broken.
+
+There's a few ways to mock portions of our codebase. If you've read any blogs on testing or seen stuff on LinkedIn and Twitter about testing, you might have heard the terms _mock_, _spy_, and _stub_ used interchangeably when talking about mocking.
 
 ### Spies
 
@@ -446,7 +629,7 @@ describe('threadsController', () => {
 
 This is because right now we're actually updating the "database" in the `POST` test, and we're actually reading from the "database" in the `GET` test. Since our database is just another file in the filesystem we didn't notice it right away (since we didn't need to connect to a real DB) but we still shouldn't be updating the database from our unit tests.
 
-How can we fix these issues? One way is to mock out the entire `ThreadsService` so that it doesn't hit the database. We can't do this via dependency injection though, since it's not a function argument, so we'll need to use Jest's ["file mocks"](TODO: link).
+How can we fix these issues? One way is to mock out the entire `ThreadsService` so that it doesn't hit the database. We can't do this via dependency injection though, since it's not a function argument, so we'll need to use Jest's ["file mocks"](https://jestjs.io/docs/en/jest-object#jestmockmodulename-factory-options).
 
 Jest's file mocks use the `jest.mock` function, which takes two arguments. The first is the path to the file you want to mock _from the test itself_, and the second provides a mock implementation of the file's exports.
 
@@ -551,7 +734,62 @@ Create a new test for the `commentsController` in `src/backend/__tests__/comment
   <summary>Expand to view the answer.</summary>
 
 ```js
-TODO: finish answer
+import { commentsController } from '../commentsController'
+
+jest.mock('../threadsService', () => {
+  const MockThreadsService = {
+    addComment: (id, comment) => {
+      return {
+        id: id,
+        ...comment,
+      }
+    },
+  }
+
+  return {
+    ThreadsService: MockThreadsService,
+  }
+})
+
+describe('commentsController', () => {
+  test('should respond 201 with the comment when sending a POST request', () => {
+    // arrange
+    const mockReq = {
+      method: 'POST',
+      query: {
+        id: '123',
+      },
+      body: {
+        user: '@tester',
+        content: 'This is a comment',
+      },
+    }
+
+    const mockJson = jest.fn()
+    const mockStatus = jest.fn().mockImplementation(() => {
+      return {
+        json: mockJson,
+      }
+    })
+    const mockRes = {
+      status: mockStatus,
+    }
+
+    // act
+    commentsController(mockReq, mockRes)
+
+    // assert
+    expect(mockStatus).toHaveBeenCalledTimes(1)
+    expect(mockStatus).toHaveBeenCalledWith(201)
+
+    expect(mockJson).toHaveBeenCalledTimes(1)
+    expect(mockJson).toHaveBeenCalledWith({
+      content: 'This is a comment',
+      id: '123',
+      user: '@tester',
+    })
+  })
+})
 ```
 
 </details>
@@ -814,7 +1052,22 @@ Create a new test file for `generateId` in `src/utils/__tests__/generateId.test.
   <summary>Expand to see the answer.</summary>
 
 ```js
-TODO: add answer
+import { generateId } from '../generateId'
+
+const originalMathRandom = Math.random
+describe('generateId', () => {
+  beforeAll(() => {
+    Math.random = () => 0.54321
+  })
+
+  afterAll(() => {
+    Math.random = originalMathRandom
+  })
+
+  test('should generate a random id', () => {
+    expect(generateId()).toEqual('jk007gql6')
+  })
+})
 ```
 
 </details>
@@ -822,6 +1075,70 @@ TODO: add answer
 > ⭐️ Bonus points: there's actually a much more elegant way to mock something on a global object using some features of Jest. Check out this [article I wrote about mocking fetch](https://www.benjaminjohnson.me/blog/mocking-fetch/) and see if you can update the global mocks we added to use this method.
 
 ## ⏱ Organizing mocks for reuse (bonus content?)
+
+Over time, you might find that you're always mocking the same things and that you have a lot of duplication due to mocking. For example, in each controller we're mocking the `ThreadsService`.
+
+Fortunately Jest gives us a way to clean up this reuse of our mocks by using their [`manual mocks`](https://jestjs.io/docs/en/manual-mocks) API. What we can do is we can make a "mock" version of the `threadsService` file and drop it in a `__mocks__` folder next to the real `threadsService` module. Once we do that, Jest, will automatically use our mock when we do `jest.mock`.
+
+Let's create a new file at `src/backend/__mocks__/threadsService.js`. Inside of it we'll combine our two mocks of the `threadsService` that we previously had in the test files
+
+```js
+// src/backend/__mocks__/threadsService.js
+
+export const ThreadsService = {
+  getAllThreads: () => {
+    return [
+      {
+        comments: ['a', 'b'],
+        content: 'This is the content for the thread',
+        id: '1',
+        reactions: {
+          '👍': 20,
+          '🔥': 30,
+        },
+        title: 'My first thread!',
+      },
+      {
+        comments: ['c'],
+        content:
+          "This is the content for the second thread, it's got some stuffz",
+        id: '2',
+        reactions: { '🚀': 3 },
+        title: 'Another cool thread',
+      },
+    ]
+  },
+
+  addThread: newThreadData => {
+    const id = '1'
+    return {
+      comments: [],
+      id,
+      reactions: {},
+      ...newThreadData,
+    }
+  },
+
+  addComment: (id, comment) => {
+    return {
+      id: id,
+      ...comment,
+    }
+  },
+}
+
+```
+
+Once again, _we do not need to mock everything in `threadsService`_, only the portions that we use. That said, chances are your file mocks will be more complete than your mocks inside of the test files.
+
+Once we've set up our mock file for `threadsService` we can update our mock to just be this:
+
+```js
+// src/backend/__tests__/threadByIdController.js
+
+jest.mock('../threadsService')
+```
+
 
 ## Review: mocking (5)
 
@@ -1178,7 +1495,7 @@ If you run the tests again you should get a few failures from the failed ids. Go
 
 ## 💻 Exercise 6 (5)
 
-<!-- TODO: write this portion -->
+<!-- TODO: write this section, write a test for the commentsController -->
 
 ## Integration testing for frontend code (15)
 
@@ -1332,9 +1649,70 @@ Think about how you would interact with this form and what the ideal result is. 
 
 <details>
   <summary>Expand to view the answer</summary>
+
+```js
+// src/components/__tests__/AddCommentForm.test.js
+
+import { render, fireEvent } from '@testing-library/react'
+import { AddCommentForm } from '../AddCommentForm'
+
+describe('<AddCommentForm />', () => {
+  test('should allow submitting the form', () => {
+    const onSubmit = jest.fn()
+    const { getByLabelText, getByText } = render(
+      <AddCommentForm onSubmitForm={onSubmit} />
+    )
+
+    fireEvent.change(getByLabelText('User'), {
+      target: { value: '@benjamminj' },
+    })
+    fireEvent.change(getByLabelText('Content'), {
+      target: { value: 'This is test content' },
+    })
+
+    fireEvent.click(getByText('Submit'))
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+    expect(onSubmit).toHaveBeenCalledWith({
+      content: 'This is test content',
+      user: '@benjamminj',
+    })
+  })
+
+  test('should not submit form if username is blank', () => {
+    const onSubmit = jest.fn()
+    const { getByLabelText, getByText } = render(
+      <AddCommentForm onSubmitForm={onSubmit} />
+    )
+
+    fireEvent.change(getByLabelText('Content'), {
+      target: { value: 'This is test content' },
+    })
+
+    fireEvent.click(getByText('Submit'))
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  test('should not submit form if content is blank', () => {
+    const onSubmit = jest.fn()
+    const { getByLabelText, getByText } = render(
+      <AddCommentForm onSubmitForm={onSubmit} />
+    )
+
+    fireEvent.change(getByLabelText('User'), {
+      target: { value: '@benjamminj' },
+    })
+
+    fireEvent.click(getByText('Submit'))
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+})
+```
+
 </details>
 
 ## Review: integration testing (5)
+
+<!-- TODO: -->
 
 ## Intro to end-to-end testing (5)
 
@@ -1346,7 +1724,7 @@ End-to-end tests cover the entire application—they test the frontend, backend,
 
 Because end-to-end tests have to spin up an entire browser, they take a lot longer to run and are therefore much more "expensive". As a result you likely wouldn't want to have all of the tests for your app written as end-to-end tests, they're much better for testing the really important user flows. These would be the paths that people commonly go down or that you _really_ don't want to break.
 
-We'll be writing our end-to-end tests using [Cypress](TODO: link). It's one of the best end-to-end testing tools available today and certainly one of my favorites.
+We'll be writing our end-to-end tests using [Cypress](https://www.cypress.io/). It's one of the best end-to-end testing tools available today and certainly one of my favorites.
 
 ## Setting up end-to-end tests with Cypress (15)
 
@@ -1408,7 +1786,7 @@ If we run Cypress we should see our test open in a new instance of Chrome. Let's
 }
 ```
 
-And then we run it with `yarn e2e`. You should see a prompt from Cypress asking us which test we want to run. Click on `e2e_spec.js` and it should open our test in Chrome!
+And then we run it with `yarn e2e` (you'll need to start a server in the other tab, I recommend doing so with `yarn build && yarn start` so that you're not hot-reloading your app a bunch while writing your tests). You should see a prompt from Cypress asking us which test we want to run. Click on `e2e_spec.js` and it should open our test in Chrome!
 
 ## Writing our end-to-end test
 
@@ -1481,7 +1859,19 @@ describe('threads list & profile', () => {
 })
 ```
 
-TODO: transition to 5
+Step 3 is a little more involved than what we did in step 2. First, we fire a click event on the label containing the "Title" text. This _should_ focus the "title" input since clicking a label has that behavior. (We select the input this way instead of selecting with a classname due to our principle of wanting our tests to mirror how a user would actually use the software).
+
+Since `cy.contains("Title").click()` focuses the input, we can select the input with `cy.focused`. This is both a check and a selector—if the input isn't focused then we won't be selecting it and our test should fail. But it's also a selector—after selecting the "title" input we use `.type` to trigger typing on the input.
+
+We do these exact same steps with the "Content" label to finish filling out the form. But we need to do a little bit of mocking before we submit it.
+
+In order to _spy_ on the endpoint, we need to use `cy.route()` to hook into the network layer of Cypress. Because Cypress controls the browser, it can listen to all networks requests going in and out and record them for us. In this case we want to listen to the `POST` request going to `/api/threads`. We also are going to alias it so that Cypress knows that we want to assert on it later. We do this with the `.as("aliasName")` (you can alias anything Cypress grabs onto, it's not just limited to API requests and responses).
+
+> Cypress has a super cool feature that also allows you to mock out entire responses for your endpoints, but we likely won't be diving into that in this workshop. It works similar to the way we mocked the network in our integration tests, and is incredibly useful for recreating difficult to reproduce scenarios (like error responses, when the network is down, etc.)
+
+Finally, now that we've set up our spy on the endpoint, we can trigger a click event to submit the form with `cy.contains("Submit").click()`.
+
+Coming down the home stretch—let's do step 5!
 
 ```js
 describe('threads list & profile', () => {
@@ -1531,7 +1921,19 @@ describe('threads list & profile', () => {
 })
 ```
 
-TODO: transition to 6
+Step 5 shows _why_ it was important for us to create that API spy and alias it to `createThread`. Since API requests will take an arbitrary amount of time to resolve, we want to tell Cypress to _wait_ until the request finishes before continuing the test. That way it's not trying to assert against things that don't exist in the DOM yet. We do this with `cy.wait("@createThread")` (the name of our alias with an `@` symbol in front).
+
+Once our `POST` request resolves correctly, we then want to do a couple things. _If_ it resolved ok, our new thread should exist in the DOM as a link preview. It should have an `href` pointing to a url containing its server-generated id as well.
+
+Since these ids will vary from test to test, and we don't want to heavily mock in our end-to-end tests, we actually want to grab the `href` itself and save _that value_ to a Cypress alias so that we can use it later.
+
+We use `cy.contains(title)` to fetch the thread we just created, and then we can use the `.then` method to operate on the DOM node that we just selected. If you're reading the Cypress docs, they discuss this `.then` as something called `yields`. The idea is that most Cypress methods _yield_ or _return_ something that we can use for assertions or further operations. In this case we were selecting a DOM node, so our `cy.contains` should _yield_ an `a` tag. I've named this variable `$anchor` (the `$` is a naming convention in the Cypress docs for the stuff yielded in `.then`).
+
+Once we have the `$anchor` we want to grab its `href` attribute with the `.attr` method (a lot of these methods can be found in the Cypress docs, I'll be honest I don't know them all by heart!). We then want to alias the `href` value, so we can do that with `cy.wrap(href).as('threadId')` (`cy.wrap` allows us to convert non-Cypress values into things that Cypress can properly store).
+
+Finally, we trigger a click event on the link, and then we wait for the title to appear in the next page. Once the next page is loaded, we run a quick check on the url with Cypress to make sure that it actually is the url of our newly created thread. We do this with the combination of `cy.get('@threadId')` to let us retrieve our aliased value and `cy.url().should('include', id)` to assert that the url actually contains the value.
+
+Let's finish this test off with our final step.
 
 ```js
 describe('threads list & profile', () => {
@@ -1611,9 +2013,29 @@ describe('threads list & profile', () => {
 })
 ```
 
+This is certainly the longest portion of the test, but it's mostly the same stuff as the other portions of the test. We add a mock for our `PATCH` to update thread reactions and our `POST` to create a new comment and then run the necessary user actions to make those requests fire.
+
+## Review: End-to-end tests
+
+Whew. That was quite a bit, and it leverages Cypress' API fairly heavily. It might feel a little bit like drinking from a firehose—but the important part is identifying those key user actions and breaking down the end-to-end tests into a set of concrete steps. Once we've done _that_, writing our test becomes a matter of figuring out _how_ to express these user actions using Cypress' API.
+
+It's also important to note that Cypress can do way more than we're doing in this test. You can set cookies and request headers, modify session state, change your Redux store—basically anything that helps you to get your app into a state that makes it easy to test. For example, if you have an app with authentication you might want to set a cookie _before_ running your tests so that Cypress doesn't have to log in every time.
+
+Cypress also has a fantastic API for [stubbing out API requests](https://docs.cypress.io/api/commands/route.html#Arguments), which I mentioned earlier. This can be incredibly useful for simulating how your frontend might respond under adverse network conditions or if an API goes down (without having to bring the entire API down). Technically stubbing out an API isn't a _true_ end-to-end test since we're doing some mocking, but our tests should work for us, and not the other way around. If it increases your confidence to have a Cypress test for that scenario, mock the endpoint and write the test!
+
+Lastly, if you're using a real database and you plan on running your end-to-end tests in a deployed test environment (which is a good idea since they'll more closely mirror your production environment), it's a good idea to have your Cypress tests _arrange_ and _clean up_ the data that they are using for tests. We won't really dive into _how_ to do this from Cypress, but you can either have it use the API to seed and delete test data or you can do so via command-line scripts.
+
 ## 💻 Exercise 8 (10)
 
+Add a new Cypress test to handle error states within the app using Cypress's response mocking. You can organize the test however you want (in the same spec file or in a different one), but go through the flow of a user creating a thread and attempting to go to the thread profile page. However, make it so that the `POST` request to create a new thread fails! 😱
+
+You may find that the app doesn't respond gracefully when this request fails. In this case consider the failing test a completion of this exercise. As a bonus, update the code to make the app handle failure states more gracefully.
+
+> 💡 Tip: you'll want to check out [`cy.request`](https://docs.cypress.io/api/commands/request.html#Options) with the `options` argument. This should give you what you need to make the network request return an error status.
+
 ## Conclusion (5)
+
+<!-- TODO: -->
 
 ## Going the extra mile
 

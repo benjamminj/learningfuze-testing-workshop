@@ -19,6 +19,9 @@ export const AddCommentForm = ({ onSubmitForm }) => {
     <form
       onSubmit={ev => {
         ev.preventDefault()
+
+        if (!user || !content) return
+
         onSubmitForm({ user, content })
 
         // reset the form
