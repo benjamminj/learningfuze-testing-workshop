@@ -12,6 +12,7 @@ export const resolveApiHandler = (req, res, handler) => {
 
 export const createMockApp = (endpoint, controller) => {
   const app = express()
+
   app.use(endpoint, (req, res) => resolveApiHandler(req, res, controller))
 
   return app
