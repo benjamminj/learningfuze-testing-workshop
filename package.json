@@ -9,7 +9,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "test": "echo 'testing'"
+    "test": "jest"
   },
   "prettier": {
     "semi": false,

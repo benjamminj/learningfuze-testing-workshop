@@ -3,7 +3,13 @@
  * @param {number[]} values
  */
 // export const sumValues = valuesArray => {
-//   return valuesArray.reduce((sum, val) => sum + val, 0)
+//   let sum = 0
+
+//   for (const num of valuesArray) {
+//     sum += num
+//   }
+
+//   return sum
 // }
 
 // Uncomment this version of sumValues and comment the other one out if you're
