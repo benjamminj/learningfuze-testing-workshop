@@ -22,7 +22,7 @@ Nothing complex or frilly. Nothing about units, integrations, end-to-end, or eve
 
 However, for the purposes of this workshop we'll be focusing mainly on _automated testing_. So let's make sure that we define that.
 
-> Automated software testing using code to make sure your code works correctly.
+> Automated software testing is using code to make sure your code works correctly.
 
 Still the same goal, the main difference is that we're leveraging that power of the computer to _automate_ checking that our software works. For this workshop I will refer to _automated testing_ and _testing_ interchangably. When we're talking about _non-automated testing_ I'll refer to it as _manual testing_.
 
