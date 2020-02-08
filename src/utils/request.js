@@ -5,12 +5,10 @@ import fetch from 'isomorphic-unfetch'
 // to fail fast if process.env.ROOT_URL isn't available in this file.
 const rootUrl = process.env.ROOT_URL || 'http://localhost:3000'
 
-export const request = (url, options = {}) => {
-  let body
-
-  if (options.body) {
-    body = JSON.stringify(options.body)
+export const request = (url, options) => {
+  if (options && options.body) {
+    options.body = JSON.stringify(options.body)
   }
 
-  return fetch(rootUrl + url, { ...options, body }).then(res => res.json())
+  return fetch(rootUrl + url, options).then(res => res.json())
 }

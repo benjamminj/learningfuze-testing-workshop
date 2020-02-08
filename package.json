@@ -8,28 +8,12 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "test": "jest",
-    "test:cov": "jest --coverage",
-    "e2e": "cypress open"
+    "start": "next start"
   },
   "prettier": {
     "semi": false,
     "singleQuote": true,
     "trailingComma": "es5"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "./src/**/*.js"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 37,
-        "functions": 14.25,
-        "lines": 17,
-        "statements": 18
-      }
-    }
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.0.2",

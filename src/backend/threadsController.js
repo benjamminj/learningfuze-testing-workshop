@@ -15,6 +15,10 @@ export const threadsController = (req, res) => {
   }
 
   if (req.method === 'POST') {
+    if (typeof req.body === 'object') {
+      req.body = JSON.stringify(req.body)
+    }
+
     const newThread = ThreadsService.addThread(JSON.parse(req.body))
     res.status(201).json(newThread)
   }
