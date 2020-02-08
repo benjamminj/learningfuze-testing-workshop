@@ -1788,3 +1788,19 @@ Cypress also has a fantastic API for [stubbing out API requests](https://docs.cy
 Lastly, if you're using a real database and you plan on running your end-to-end tests in a deployed test environment (which is a good idea since they'll more closely mirror your production environment), it's a good idea to have your Cypress tests _arrange_ and _clean up_ the data that they are using for tests. We won't really dive into _how_ to do this from Cypress, but you can either have it use the API to seed and delete test data or you can do so via command-line scripts.
 
 ## Conclusion
+
+There's a lot of things we've covered, however, the only real way to become a master at testing is to _practice_. Here's a couple quick practical ways to continue learning about testing and putting it into practice.
+
+- We didn't test _everything_ in this app! Try adding enough tests in this app to push the coverage numbers up to 100%. While you might not want 100% in every project, it's a good exercise to take at least one app all the way there. 💯
+- Try this stuff out on a side project. Try starting from scratch and installing all of the Jest stuff yourself! Find a coverage number that makes you feel confident in the code that you're shipping.
+- Try TDD (Test Driven Development). While we didn't cover it here, TDD basically means that you write the _tests before you write the code_. You write a failing test, and then write the code to make it pass. Once you've got a passing test, you write another failing test, and then the code to make it pass. Rinse and repeat.
+- If you're currently at a company that doesn't do much automated testing, be a champion for testing in your engineering team! I've worked at 2 companies where testing culture was very low when I started (at one of them I was a junior developer) and at both of them I championed adding tests to the app. At one of them the culture of the team eventually shifted towards testing and at the other I left before I could see the culture shift. People might be resistant but many times they'll still let you do a demo of the stuff—and being forced to teach your teammates how to test is a great motivation to internalize all of the testing content.
+
+## Resources for further learning
+
+- [My blog](https://www.benjaminjohnson.me/blog): I try to post content on my blog from time to time and since I'm very passionate about testing the topic does comes up in my articles. Since creating the content for this workshop I actually have a good deal of "overflow" content that will almost certainly make its way into some blog posts in the coming months.
+- [TestingJavaScript.com](https://testingjavascript.com/): it's a bit more expensive than this workshop (about \$300 for a license) but Kent C. Dodds is a master of testing and his content is almost always well worth it. I haven't taken the course myself but I have a few friends that have and they all said that it was amazing.
+- **Check the docs for what you're working with:** most front-end and back-end frameworks ship with a "preferred way to test" that's recommended in their docs. For example, the React docs talk about some popular testing tools. If you look at Angular, they have their own way of testing that's different than React. It's always a good idea to see if the community already has a good testing solution in place.
+- [Testing library docs](https://testing-library.com/): testing library has a ton of great guides in their docs, by simply running thru their docs you'll get a lot of best practices for testing, whether of not you use `@testing-library`
+- [Cypress JS Best Practices](https://docs.cypress.io/guides/references/best-practices.html): while they are specific to `cypress`, there's a lot of good stuff there!
+- **Experience!** The best way to learn to write tests and mocks, is to write tests and mocks. There's no magic formula, the best way to learn these is to practice.
