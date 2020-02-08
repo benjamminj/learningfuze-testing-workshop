@@ -334,3 +334,317 @@ describe('b', () => {
   test('something testing b', () => {})
 })
 ```
+
+## ⏱ Organizing mocks for reuse (bonus content?)
+
+<!-- Estimated time: 5 minutes -->
+
+Over time, you might find that you're always mocking the same things and that you have a lot of duplication due to mocking. For example, in each controller we're mocking the `ThreadsService`.
+
+Fortunately Jest gives us a way to clean up this reuse of our mocks by using their [`manual mocks`](https://jestjs.io/docs/en/manual-mocks) API. What we can do is we can make a "mock" version of the `threadsService` file and drop it in a `__mocks__` folder next to the real `threadsService` module. Once we do that, Jest, will automatically use our mock when we do `jest.mock`.
+
+Let's create a new file at `src/backend/__mocks__/threadsService.js`. Inside of it we'll combine our two mocks of the `threadsService` that we previously had in the test files
+
+```js
+// src/backend/__mocks__/threadsService.js
+
+export const ThreadsService = {
+  getAllThreads: () => {
+    return [
+      {
+        comments: ['a', 'b'],
+        content: 'This is the content for the thread',
+        id: '1',
+        reactions: {
+          '👍': 20,
+          '🔥': 30,
+        },
+        title: 'My first thread!',
+      },
+      {
+        comments: ['c'],
+        content:
+          "This is the content for the second thread, it's got some stuffz",
+        id: '2',
+        reactions: { '🚀': 3 },
+        title: 'Another cool thread',
+      },
+    ]
+  },
+
+  addThread: newThreadData => {
+    const id = '1'
+    return {
+      comments: [],
+      id,
+      reactions: {},
+      ...newThreadData,
+    }
+  },
+
+  addComment: (id, comment) => {
+    return {
+      id: id,
+      ...comment,
+    }
+  },
+}
+```
+
+Once again, _we do not need to mock everything in `threadsService`_, only the portions that we use. That said, chances are your file mocks will be more complete than your mocks inside of the test files.
+
+Once we've set up our mock file for `threadsService` we can update our mock to just be this:
+
+```js
+// src/backend/__tests__/threadByIdController.js
+
+jest.mock('../threadsService')
+```
+
+## 💻 Exercise 8
+
+<!-- Estimated time: 10 min -->
+
+Add a new Cypress test to handle error states within the app using Cypress's response mocking. You can organize the test however you want (in the same spec file or in a different one), but go through the flow of a user creating a thread and attempting to go to the thread profile page. However, make it so that the `POST` request to create a new thread fails! 😱
+
+You may find that the app doesn't respond gracefully when this request fails. In this case consider the failing test a completion of this exercise. As a bonus, update the code to make the app handle failure states more gracefully.
+
+> 💡 Tip: you'll want to check out [`cy.request`](https://docs.cypress.io/api/commands/request.html#Options) with the `options` argument. This should give you what you need to make the network request return an error status.
+
+## 💻 Exercise #2
+
+<!-- Estimated time: 5-10 min -->
+
+Create a new test file inside `src/utils/__tests__` named `map.test.js`. Import the `map` function and write some tests to cover its functionality. If you find bugs feel free to modify the `map` function, but remember to write a failing test first!
+
+Use the `expect` assertions provided by Jest.
+
+> Tip: if you're having trouble trying to figure out _what_ to test, try reading the comments and code inside the `map` function. I've left a bit of documentation about what it's supposed to do.
+
+```js
+// map.test.js
+import { map } from '../map'
+
+describe('map', () => {
+  // write your tests here
+})
+```
+
+### Mocking a global dependency
+
+<!-- Estimated time: 5 min -->
+
+`request` uses `process.env.ROOT_URL` to provide a base url for the request. For example, if you set `ROOT_URL=https://example.com` and then ran `request('/test')`, you'd actually be firing a request to `https://example.com/test`. Right now there's a default of `http://localhost:3000` inside of `request`, but ideally we should mock out `process.env.ROOT_URL` in our test so we can test that as well.
+
+However, `process.env` is a globally added object inside of Node. We don't want to mess up other test files that rely on `process.env` when we create our mock, so we'll need to be extra careful to set up and tear down our mock.
+
+We can leverage two more lifecycle hooks from Jest, `beforeAll` (runs before the entire test suite) and `afterAll` (runs after the entire test suite) to handle setup/teardown.
+
+```js
+// src/utils/__tests__/request.test.js
+
+// Store a reference to the actual process.env.ROOT_URL so that we can restore it.
+const originalRootUrl = process.env.ROOT_URL
+
+describe('request', () => {
+  beforeAll(() => {
+    // Set process.env.ROOT_URL to whatever we want for our tests
+    process.env.ROOT_URL = 'https://example.com'
+  })
+
+  afterAll(() => {
+    // Restore the original process.env.ROOT_URL
+    process.env.ROOT_URL = originalRootUrl
+  })
+
+  beforeEach(() => {
+    fetch.mockClear()
+  })
+
+  test('should return json for the endpoint', async () => {
+    // test
+  })
+
+  test('should allow passing "method" and "body" options to fetch', async () => {
+    // test
+  })
+})
+```
+
+Now that we're using a mock for `process.env.ROOT_URL`, all we need to do is update our tests to assert our new endpoint.
+
+```js
+// src/utils/__tests__/request.test.js
+
+// mocking stuff up here
+
+describe('request', () => {
+  // test lifecycle hooks up here
+
+  test('should send a fetch request to the url and resolve with the JSON', async () => {
+    // arrange — mocking is done up above
+    // act
+    const result = await request('/test')
+    // assert
+    expect(fetch).toHaveBeenCalledTimes(1)
+
+    // update this line
+    expect(fetch).toHaveBeenCalledWith('https://example.com/test', {})
+    expect(result).toEqual({ test: 'json' })
+  })
+
+  test('should allow passing "method" and "body" options to fetch', async () => {
+    const result = await request('/another', {
+      method: 'POST',
+      body: { content: 'test' },
+    })
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+
+    // update this line
+    expect(fetch).toHaveBeenCalledWith('https://example.com/another', {
+      method: 'POST',
+      body: '{"content":"test"}',
+    })
+  })
+})
+```
+
+## 💻 Exercise 5
+
+<!-- Estimated time: 5 min -->
+
+Create a new test file for `generateId` in `src/utils/__tests__/generateId.test.js`. This function relies on `Math.random` to create a unique id every time it is called. Mock out `Math.random` and write a test for `generateId`.
+
+> 💡 Tip: check out what `Math.random` returns by [checking it out on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random). Make sure that your mock returns the same type of response as the real `Math.random`. One quick way to get mock values is to try it out in a console (ie the browser console or Node REPL) and copy-paste an actual value for your mock.
+
+<details>
+  <summary>Expand to see the answer.</summary>
+
+```js
+import { generateId } from '../generateId'
+
+const originalMathRandom = Math.random
+describe('generateId', () => {
+  beforeAll(() => {
+    Math.random = () => 0.54321
+  })
+
+  afterAll(() => {
+    Math.random = originalMathRandom
+  })
+
+  test('should generate a random id', () => {
+    expect(generateId()).toEqual('jk007gql6')
+  })
+})
+```
+
+</details>
+
+> ⭐️ Bonus points: there's actually a much more elegant way to mock something on a global object using some features of Jest. Check out this [article I wrote about mocking fetch](https://www.benjaminjohnson.me/blog/mocking-fetch/) and see if you can update the global mocks we added to use this method.
+
+## 💻 Exercise 6
+
+<!-- Estimated time: 5-10 min -->
+
+Let's add a test for `src/backend/commentsController.js`. Only mock out the database with a Jest mock and use `supertest` to create a mock app and hit the endpoint in your tests.
+
+> 💡 Tip: You'll likely need to reuse the adapter we wrote for the other backend integration test, at this time if you want it might be a good idea to spin up a new `test-utils/createApp` function to house the logic.
+
+> 💡 Tip: You'll also likely have the same mock for the database, this would be a good time to move the database mock to one of the Jest file mocks that we covered earlier in our unit on mocking. 💪
+
+<details>
+  <summary>Expand to view the answer:</summary>
+
+```js
+import express from 'express'
+import { apiResolver } from 'next/dist/next-server/server/api-utils'
+import request from 'supertest'
+import { commentsController } from '../commentsController'
+
+// This is the answer without file mocks, if you have your mocks in files then your
+// `jest.mock` will be considerably shorter.
+jest.mock('../threadsData', () => {
+  return {
+    threads: {
+      a: {
+        id: 'a',
+        title: 'My first thread!',
+        content: 'This is the content for the thread',
+        comments: ['1', '3'],
+        reactions: {
+          '🔥': 30,
+          '👍': 20,
+        },
+      },
+      b: {
+        id: 'b',
+        title: 'Another cool thread',
+        content:
+          "This is the content for the second thread, it's got some stuffz",
+        comments: ['2'],
+        reactions: {
+          '🚀': 3,
+        },
+      },
+    },
+    comments: {
+      '1': {
+        id: '1',
+        user: 'Ben Johnson',
+        content: 'This is a comment',
+      },
+      '2': {
+        id: '2',
+        user: 'Ben Johnson',
+        content: 'This is another comment',
+      },
+      '3': {
+        id: '3',
+        user: 'Test Tester',
+        content: 'This is a comment from Test Tester',
+      },
+    },
+  }
+})
+
+const resolveApiHandler = (req, res, handler) => {
+  req.query = {
+    ...req.query,
+    ...req.params,
+  }
+
+  return apiResolver(req, res, req.params, handler)
+}
+
+const app = express()
+app.use('/threads/:id/comments', (req, res) =>
+  resolveApiHandler(req, res, commentsController)
+)
+
+const id = 'a'
+
+describe('/comments', () => {
+  test('should allow creating a comment', async () => {
+    const res = await request(app)
+      .post(`/threads/${id}/comments`)
+      .set('content-type', 'application/json')
+      .send({ user: '@benjamminj', content: 'test' })
+
+    expect(res.status).toEqual(201)
+
+    const { id: commentId, ...body } = res.body
+
+    // Since id is auto-generated, we just want to check that it was generated.
+    // Reason is we're still running thru all of the business logic.
+    expect(typeof commentId).toEqual('string')
+    expect(body).toEqual({
+      content: 'test',
+      user: '@benjamminj',
+    })
+  })
+})
+```
+
+</details>
