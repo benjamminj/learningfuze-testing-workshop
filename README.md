@@ -55,21 +55,21 @@ Here's a couple reasons of my own:
 
 <!-- Estimated time: 5 min -->
 
-https://github.com/benjamminj/learningfuze-workshop-setting-up-tests
+https://github.com/benjamminj/learningfuze-testing-workshop
 
 **Step 1:** "Fork" the repo using the "fork" button in the top right corner. This will create your own local "clone" of the repository, where you have full access to commit to `master`. _It's important that you fork the repo since we will be setting up services that require you to have push access to the repo on GitHub._
 **Step 2:** Clone your fork of the repo by copying the HTTPS link in the top right.
 
 ```bash
-git clone https://github.com/{your username}/learningfuze-workshop-setting-up-tests.git
+git clone https://github.com/{your username}/learningfuze-testing-workshop.git
 
-cd learningfuze-workshop-setting-up-tests
+cd learningfuze-testing-workshop
 ```
 
 **Step 3:** Add my repo as the "upstream" branch to the repo:
 
 ```bash
-git remote add upstream https://github.com/benjamminj/learningfuze-workshop-setting-up-tests.git
+git remote add upstream https://github.com/benjamminj/learningfuze-testing-workshop.git
 ```
 
 To verify that the upstream branch was added you can use this command:
